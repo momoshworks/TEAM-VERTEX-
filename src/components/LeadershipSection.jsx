@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Shield, Award, Terminal, Heart, Stethoscope, Sparkles, ExternalLink } from 'lucide-react';
+import { Shield, Award, Terminal, Heart, Stethoscope, Sparkles, UserCheck } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function LeadershipSection() {
   const [activeTab, setActiveTab] = useState('admins');
 
-  // Admins directly from user's provided screenshot
+  // Complete list of VERTEX Admins
   const admins = [
     {
       name: 'eng, moaz deabes',
@@ -41,6 +41,48 @@ export default function LeadershipSection() {
       badge: 'Core Admin',
       specialty: 'Medical AI & Bio-Imaging Analysis',
       skills: ['Medical Vision', 'Bioinformatics', 'Data Analytics', 'Healthcare AI'],
+      status: 'Online & Active',
+    },
+    {
+      name: 'بشمهندسة نيفين (Eng. Niveen)',
+      title: 'Group Admin & AI Research Lead',
+      arabicRole: 'مسؤولة الأبحاث الأكاديمية والذكاء الاصطناعي',
+      emoji: '👩‍💻✨',
+      bio: 'الإشراف على الدراسات والأبحاث الأكاديمية في معالجة اللغات الطبيعية وتعلم الآلة وتوجيه فرق العمل البحثية.',
+      badge: 'Group Admin',
+      initials: 'N',
+      avatarGradient: 'from-purple-600 via-pink-600 to-indigo-600',
+      borderColor: 'border-pink-400',
+      specialty: 'Machine Learning & NLP Research',
+      skills: ['NLP & LLMs', 'Academic Research', 'Model Optimization', 'Python'],
+      status: 'Online & Active',
+    },
+    {
+      name: 'بشمهندس محمد شعبان (Eng. Mohamed Shaaban)',
+      title: 'Group Admin & AI Software Lead',
+      arabicRole: 'مسؤول التطوير البرمجي والأنظمة الذكية',
+      emoji: '👨‍💻🚀',
+      bio: 'قيادة فرق تطوير البرمجيات، الأنظمة الذكية المستقلة، وتطبيقات الرؤية الحاسوبية في المشاريع العملية للكلية.',
+      badge: 'Group Admin',
+      initials: 'M',
+      avatarGradient: 'from-cyan-500 via-blue-600 to-indigo-700',
+      borderColor: 'border-cyan-400',
+      specialty: 'Autonomous Systems & Computer Vision',
+      skills: ['Computer Vision', 'Deep Learning', 'Software Architecture', 'C++'],
+      status: 'Online & Active',
+    },
+    {
+      name: 'بشمهندسة روان (Eng. Rawan)',
+      title: 'Group Admin & Data Science Lead',
+      arabicRole: 'مسؤولة مسارات علم البيانات والابتكار',
+      emoji: '👩‍💻💡',
+      bio: 'إدارة مسارات تحليل البيانات الضخمة، تدريب النماذج التنبؤية، وتنظيم المعسكرات التقنية لأعضاء الفريق.',
+      badge: 'Group Admin',
+      initials: 'R',
+      avatarGradient: 'from-emerald-500 via-teal-600 to-blue-600',
+      borderColor: 'border-emerald-400',
+      specialty: 'Data Science & Predictive Analytics',
+      skills: ['Data Analytics', 'Big Data', 'Feature Engineering', 'Mentorship'],
       status: 'Online & Active',
     },
   ];
@@ -102,7 +144,7 @@ export default function LeadershipSection() {
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            إدارة الفريق (Group Admins)
+            إدارة الفريق (Group Admins) ({admins.length})
           </button>
           <button
             onClick={() => {
@@ -124,7 +166,7 @@ export default function LeadershipSection() {
       <div className="scroll-reveal min-h-[360px]">
         {/* Admins Grid */}
         {activeTab === 'admins' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in zoom-in-95 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in zoom-in-95 duration-300">
             {admins.map((admin, idx) => (
               <div
                 key={idx}
@@ -135,19 +177,27 @@ export default function LeadershipSection() {
                 <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform" />
 
                 <div>
-                  {/* Avatar with authentic crop from user screenshot */}
+                  {/* Avatar rendering */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="relative">
-                      <div
-                        className="w-20 h-20 rounded-full border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.5)] bg-black group-hover:scale-105 transition-transform"
-                        style={{
-                          backgroundImage: `url('/team-source.png')`,
-                          backgroundSize: '550px 240px',
-                          backgroundPosition: admin.bgOffset,
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                        title={admin.name}
-                      />
+                      {admin.bgOffset ? (
+                        <div
+                          className="w-20 h-20 rounded-full border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.5)] bg-black group-hover:scale-105 transition-transform"
+                          style={{
+                            backgroundImage: `url('/team-source.png')`,
+                            backgroundSize: '550px 240px',
+                            backgroundPosition: admin.bgOffset,
+                            backgroundRepeat: 'no-repeat',
+                          }}
+                          title={admin.name}
+                        />
+                      ) : (
+                        <div
+                          className={`w-20 h-20 rounded-full border-2 ${admin.borderColor} shadow-[0_0_15px_rgba(0,229,255,0.4)] bg-gradient-to-br ${admin.avatarGradient} flex items-center justify-center text-white font-orbitron font-extrabold text-2xl group-hover:scale-105 transition-transform shadow-inner`}
+                        >
+                          <span>{admin.initials}</span>
+                        </div>
+                      )}
                       <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-black shadow-[0_0_8px_#10b981]" />
                     </div>
 
