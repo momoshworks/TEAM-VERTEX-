@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Shield, Award, Terminal, Heart, Stethoscope, Sparkles, Users, UserCheck } from 'lucide-react';
 import { sound } from '../utils/sound';
+import mohamedShaabanImg from '../assets/mohamed-shaaban.webp';
 
 export default function LeadershipSection() {
   const [activeTab, setActiveTab] = useState('admins');
 
-  // Official VERTEX Group Admins (4 Admins)
+  // Official VERTEX Group Admins (2 Admins)
   const admins = [
     {
       name: 'eng, moaz deabes',
@@ -17,18 +18,6 @@ export default function LeadershipSection() {
       badge: 'Group Admin',
       specialty: 'Deep Learning & AI System Architecture',
       skills: ['PyTorch', 'System Architecture', 'Research Lead', 'Mentorship'],
-      status: 'Online & Active',
-    },
-    {
-      name: 'باهَـي (Bahey)',
-      title: 'Group Admin & Operations Director',
-      arabicRole: 'مسؤول الإدارة والعمليات التقنية',
-      emoji: '⚡',
-      bio: 'تنسيق العمل المشترك بين مختلف لجان الفريق، وضمان أعلى معايير الجودة والإنتاجية في الفعاليات والمسابقات.',
-      bgOffset: '-8px -92px',
-      badge: 'Group Admin',
-      specialty: 'Technical Operations & Strategy',
-      skills: ['Agile Leadership', 'Hackathons Organizer', 'DevOps', 'Planning'],
       status: 'Online & Active',
     },
     {
@@ -45,24 +34,35 @@ export default function LeadershipSection() {
       skills: ['NLP & LLMs', 'Academic Research', 'Model Optimization', 'Python'],
       status: 'Online & Active',
     },
+  ];
+
+  // Official VERTEX Team Members (4 Members)
+  const members = [
     {
       name: 'بشمهندس محمد شعبان (Eng. Mohamed Shaaban)',
-      title: 'Group Admin & AI Software Lead',
-      arabicRole: 'مسؤول التطوير البرمجي والأنظمة الذكية',
+      title: 'Technical Lead & AI Specialist',
+      arabicRole: 'مسؤول تقني (Technical Lead)',
       emoji: '👨‍💻🚀',
-      bio: 'قيادة فرق تطوير البرمجيات، الأنظمة الذكية المستقلة، وتطبيقات الرؤية الحاسوبية في المشاريع العملية للكلية.',
-      badge: 'Group Admin',
-      initials: 'M',
-      avatarGradient: 'from-cyan-500 via-blue-600 to-indigo-700',
+      bio: 'قيادة وتطوير الحلول البرمجية التقنية، الأنظمة الذكية المستقلة، وتطبيقات الرؤية الحاسوبية في المشاريع العملية للكلية.',
+      badge: 'مسؤول تقني',
+      image: mohamedShaabanImg,
       borderColor: 'border-cyan-400',
       specialty: 'Autonomous Systems & Computer Vision',
       skills: ['Computer Vision', 'Deep Learning', 'Software Architecture', 'C++'],
-      status: 'Online & Active',
+      status: 'Active Member',
     },
-  ];
-
-  // Official VERTEX Team Members
-  const members = [
+    {
+      name: 'باهَـي (Bahey)',
+      title: 'Team Member',
+      arabicRole: 'عضو الفريق (Team Member)',
+      emoji: '⚡',
+      bio: 'المساهمة في العمليات التقنية والتنسيق بين فرق العمل في الفعاليات والأنشطة الطلابية والمسابقات.',
+      bgOffset: '-8px -92px',
+      badge: 'عضو الفريق',
+      specialty: 'Technical Operations & Strategy',
+      skills: ['Agile Coordination', 'Operations', 'DevOps', 'Planning'],
+      status: 'Active Member',
+    },
     {
       name: 'Ba7r (بحر)',
       title: 'Team Member & Bioinformatics Specialist',
@@ -70,7 +70,7 @@ export default function LeadershipSection() {
       emoji: '🩺',
       bio: 'التركيز على تطبيقات الذكاء الاصطناعي في العلوم الحيوية والرعاية الصحية، تحليل البيانات البيولوجية والمعلوماتية الحيوية.',
       bgOffset: '-8px -174px',
-      badge: 'Team Member',
+      badge: 'عضو الفريق',
       specialty: 'Bioinformatics & Medical AI Analysis',
       skills: ['Bioinformatics', 'Medical AI', 'Biological Data', 'Genomics'],
       status: 'Active Member',
@@ -81,7 +81,7 @@ export default function LeadershipSection() {
       arabicRole: 'عضوة الفريق — مسار علم وتحليل البيانات',
       emoji: '👩‍💻💡',
       bio: 'المساهمة في مشاريع تحليل البيانات واستخراج الأنماط الإحصائية، وبناء نماذج التنبؤ وتطوير الحلول البرمجية.',
-      badge: 'Team Member',
+      badge: 'عضو الفريق',
       initials: 'R',
       avatarGradient: 'from-emerald-500 via-teal-600 to-blue-600',
       borderColor: 'border-emerald-400',
@@ -197,7 +197,13 @@ export default function LeadershipSection() {
                   {/* Avatar rendering */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="relative">
-                      {admin.bgOffset ? (
+                      {admin.image ? (
+                        <img
+                          src={admin.image}
+                          alt={admin.name}
+                          className="w-20 h-20 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.5)] group-hover:scale-105 transition-transform"
+                        />
+                      ) : admin.bgOffset ? (
                         <div
                           className="w-20 h-20 rounded-full border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.5)] bg-black group-hover:scale-105 transition-transform"
                           style={{
@@ -277,7 +283,13 @@ export default function LeadershipSection() {
                   {/* Avatar rendering */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="relative">
-                      {member.bgOffset ? (
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-20 h-20 rounded-full object-cover border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:scale-105 transition-transform"
+                        />
+                      ) : member.bgOffset ? (
                         <div
                           className="w-20 h-20 rounded-full border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] bg-black group-hover:scale-105 transition-transform"
                           style={{
