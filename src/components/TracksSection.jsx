@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Camera, Bot, Database, Code2, Sparkles, ChevronLeft, Layers, CheckCircle2 } from 'lucide-react';
+import { Brain, Database, Lock, Dna, Code2, Sparkles, ChevronLeft, Layers, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function TracksSection() {
@@ -7,83 +7,87 @@ export default function TracksSection() {
 
   const tracks = [
     {
-      id: 'ml-dl',
-      name: 'تعلم الآلة والتعلم العميق',
-      enName: 'Machine & Deep Learning',
+      id: 'ai',
+      name: 'الذكاء الاصطناعي',
+      enName: 'Artificial Intelligence (AI)',
       icon: Brain,
       color: 'from-cyan-400 to-blue-600',
       badgeColor: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30',
-      desc: 'بناء وتدريب الشبكات العصبية الاصطناعية العميقة، استكشاف بنى Transformers ونماذج التنبؤ وتصنيف البيانات المعقدة.',
-      tools: ['PyTorch', 'TensorFlow', 'Scikit-Learn', 'CUDA', 'Keras'],
-      topics: [
-        'Neural Network Architectures (ANN, CNN, RNN)',
-        'Optimization & Hyperparameter Tuning',
-        'Model Deployment & ONNX Runtime',
-        'Deep Reinforcement Learning',
-      ],
-    },
-    {
-      id: 'cv-robotics',
-      name: 'الرؤية الحاسوبية والروبوتات',
-      enName: 'Computer Vision & Robotics',
-      icon: Camera,
-      color: 'from-purple-400 to-pink-600',
-      badgeColor: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
-      desc: 'تمكين الحواسيب والروبوتات من الرؤية والفهم التلقائي للصور والفيديو، واكتشاف الأجسام وتتبعها في الوقت الحقيقي.',
-      tools: ['OpenCV', 'YOLOv11', 'ROS2', 'MediaPipe', 'Point Cloud'],
-      topics: [
-        'Real-time Object Detection & Tracking',
-        'Image Segmentation & 3D Reconstruction',
-        'Autonomous Robot Navigation (SLAM)',
-        'Facial & Biometric Recognition Systems',
-      ],
-    },
-    {
-      id: 'nlp-llm',
-      name: 'معالجة اللغات والذكاء التوليدي',
-      enName: 'NLP & Generative AI (LLMs)',
-      icon: Bot,
-      color: 'from-blue-400 to-indigo-600',
-      badgeColor: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
-      desc: 'بناء تطبيقات الذكاء الاصطناعي التوليدي، معالجة النصوص العربية، هندسة الأوامر المتقدمة وبناء وكلاء ذكاء اصطناعي (AI Agents).',
-      tools: ['Hugging Face', 'LangChain', 'Llama / Mistral', 'RAG', 'Vector DBs'],
-      topics: [
-        'Arabic Language Processing & Diacritization',
-        'Retrieval-Augmented Generation (RAG)',
-        'Autonomous Multi-Agent Frameworks',
-        'Fine-Tuning Open Source LLMs',
+      desc: 'بناء وتدريب النماذج العصبية المتقدمة وتطبيقات الذكاء التوليدي والرؤية الحاسوبية ومعالجة اللغات.',
+      tools: ['PyTorch', 'TensorFlow', 'OpenCV', 'LangChain', 'YOLOv11'],
+      subTracks: [
+        'Machine Learning',
+        'Deep Learning',
+        'Computer Vision',
+        'Natural Language Processing (NLP)',
+        'Generative AI',
       ],
     },
     {
       id: 'data-science',
-      name: 'علم البيانات والتحليلات الضخمة',
-      enName: 'Data Science & Big Data',
+      name: 'علم البيانات',
+      enName: 'Data Science',
       icon: Database,
       color: 'from-emerald-400 to-teal-600',
       badgeColor: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
-      desc: 'استخراج الأنماط الخفية من ملايين البيانات، بناء لوحات تحكم ذكية، وتطبيق خوارزميات التنبؤ لاتخاذ قرارات استراتيجية.',
-      tools: ['Pandas & NumPy', 'Apache Spark', 'PowerBI', 'SQL & BigQuery', 'Seaborn'],
-      topics: [
-        'Exploratory Data Analysis (EDA)',
-        'ETL & Big Data Pipelines',
-        'Statistical Modeling & Hypothesis Testing',
-        'Predictive & Prescriptive Analytics',
+      desc: 'استكشاف واستخراج الأنماط الإحصائية من البيانات الضخمة وبناء النماذج التنبؤية والتنقيب عن البيانات.',
+      tools: ['Pandas & NumPy', 'Apache Spark', 'BigQuery', 'Scikit-Learn', 'Statistics'],
+      subTracks: [
+        'Data Analysis',
+        'Machine Learning',
+        'Big Data',
+        'Data Mining',
+        'Statistics',
       ],
     },
     {
-      id: 'problem-solving',
-      name: 'البرمجة التنافسية والخوارزميات',
-      enName: 'Competitive Programming (CP)',
-      icon: Code2,
-      color: 'from-amber-400 to-orange-600',
+      id: 'cyber-security',
+      name: 'الأمن السيبراني',
+      enName: 'Cyber Security',
+      icon: Lock,
+      color: 'from-amber-400 to-red-600',
       badgeColor: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
-      desc: 'صقل مهارات التفكير المنطقي، دراسة أعقد هياكل البيانات والخوارزميات، والإعداد المكثف لمسابقات ICPC وECPC العالمية.',
-      tools: ['C++', 'Data Structures', 'Graph Algorithms', 'Dynamic Programming', 'Codeforces'],
-      topics: [
-        'Advanced Graphs & Trees Algorithms',
-        'Dynamic Programming Optimization',
-        'Number Theory & Combinatorics',
-        'ICPC Contest Strategies & Teamwork',
+      desc: 'حماية الشبكات والأنظمة الرقمية، التشفير المتقدم، اختبار الاختراق الأخلاقي، والتحقيق الجنائي الرقمي.',
+      tools: ['Kali Linux', 'Wireshark', 'Metasploit', 'Cryptography', 'Burp Suite'],
+      subTracks: [
+        'Network Security',
+        'Information Security',
+        'Cryptography',
+        'Ethical Hacking',
+        'Digital Forensics',
+      ],
+    },
+    {
+      id: 'bioinformatics',
+      name: 'المعلوماتية الحيوية',
+      enName: 'Bioinformatics',
+      icon: Dna,
+      color: 'from-purple-400 to-pink-600',
+      badgeColor: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+      desc: 'دمج الذكاء الاصطناعي مع علوم الأحياء، تحليل البيانات الجينومية والبيولوجية المعقدة، والنمذجة الحسابية.',
+      tools: ['BioPython', 'AlphaFold', 'Genomics Pipelines', 'R & Bioconductor', 'BLAST'],
+      subTracks: [
+        'AI in Biology',
+        'Computational Biology',
+        'Genomics',
+        'Biological Data Analysis',
+      ],
+    },
+    {
+      id: 'computer-science',
+      name: 'علوم الحاسب',
+      enName: 'Computer Science',
+      icon: Code2,
+      color: 'from-blue-400 to-indigo-600',
+      badgeColor: 'bg-blue-500/10 text-blue-300 border-blue-500/30',
+      desc: 'الأساس المتين لهندسة البرمجيات، الخوارزميات المتقدمة وهياكل البيانات، قواعد البيانات، وبناء النظم الحاسوبية.',
+      tools: ['C++', 'Python', 'Algorithms', 'Data Structures', 'Software Design'],
+      subTracks: [
+        'Programming',
+        'Algorithms & Data Structures',
+        'Databases',
+        'Software Engineering',
+        'Computer Systems',
       ],
     },
   ];
@@ -99,17 +103,17 @@ export default function TracksSection() {
       <div className="scroll-reveal text-center max-w-3xl mx-auto mb-20">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-4">
           <Layers className="w-3.5 h-3.5" />
-          <span>المسارات التخصصية — SPECIALIZED TRACKS</span>
+          <span>المسارات التخصصية المعتمدة — VERTEX TRACKS</span>
         </div>
         <h2 className="font-orbitron text-3xl sm:text-5xl font-black mb-4 text-white">
-          مسارات <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">الذكاء الاصطناعي</span>
+          مسارات <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">فريق VERTEX</span>
         </h2>
         <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-          اختر مسارك وانطلق في رحلة تدريبية وتطبيقية متقدمة يشرف عليها قادة الفرق بمناهج مواكبة لسوق العمل والبحث العلمي الحديث.
+          5 مجالات رئيسية تخصصية بكلية الذكاء الاصطناعي — <span className="text-cyan-300 font-semibold">جامعة الدلتا للعلوم والتكنولوجيا</span>، تشمل مسارات فرعية دقيقة لإعداد كوادر رائدة.
         </p>
       </div>
 
-      {/* Tracks Grid */}
+      {/* Tracks Grid (5 Tracks) */}
       <div className="scroll-reveal grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tracks.map((track, idx) => {
           const Icon = track.icon;
@@ -136,18 +140,29 @@ export default function TracksSection() {
                 <h3 className="font-cairo text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">
                   {track.name}
                 </h3>
-                <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                <p className="text-slate-300 text-sm leading-relaxed mb-5">
                   {track.desc}
                 </p>
+
+                {/* Sub-tracks list inside card */}
+                <div className="mb-6 space-y-1.5">
+                  <span className="text-xs font-bold text-slate-400 block mb-2">التخصصات والمسارات الفرعية:</span>
+                  {track.subTracks.map((sub, sIdx) => (
+                    <div key={sIdx} className="flex items-center gap-2 text-xs text-slate-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                      <span>{sub}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div>
                 {/* Tech Chips */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
+                <div className="flex flex-wrap gap-1.5 mb-6 pt-3 border-t border-slate-800/80">
                   {track.tools.map((tool, tIdx) => (
                     <span
                       key={tIdx}
-                      className="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-900/80 text-slate-300 border border-slate-800"
+                      className="px-2.5 py-1 rounded-md text-xs font-mono bg-black text-slate-300 border border-slate-800"
                     >
                       {tool}
                     </span>
@@ -155,7 +170,7 @@ export default function TracksSection() {
                 </div>
 
                 <div className="flex items-center justify-between text-xs font-semibold text-cyan-400 group-hover:text-cyan-300 pt-3 border-t border-slate-800/80">
-                  <span>عرض التفاصيل والمواضيع</span>
+                  <span>التفاصيل والتسجيل المباشر</span>
                   <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 </div>
               </div>
@@ -183,7 +198,7 @@ export default function TracksSection() {
                   sound.click();
                   setSelectedTrack(null);
                 }}
-                className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center cursor-pointer"
               >
                 ✕
               </button>
@@ -195,13 +210,13 @@ export default function TracksSection() {
 
             <h4 className="font-bold text-sm text-cyan-300 mb-3 flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
-              <span>أهم المحاور التدريبية في هذا المسار:</span>
+              <span>المسارات والمحاور المندرجة تحت هذا التخصص:</span>
             </h4>
             <div className="space-y-2 mb-6">
-              {selectedTrack.topics.map((t, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs text-slate-200 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+              {selectedTrack.subTracks.map((t, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs text-slate-200 bg-black/70 p-2.5 rounded-xl border border-slate-800">
                   <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <span>{t}</span>
+                  <span className="font-semibold">{t}</span>
                 </div>
               ))}
             </div>
@@ -215,10 +230,10 @@ export default function TracksSection() {
                   sound.activate();
                   setSelectedTrack(null);
                 }}
-                className="w-full text-center py-2.5 rounded-xl text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-[1.02] transition-transform shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2"
+                className="w-full text-center py-3 rounded-xl text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-[1.02] transition-transform shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center justify-center gap-2"
               >
                 <span>سجل في مسار {selectedTrack.name} (Google Form)</span>
-                <span className="text-xs">↗</span>
+                <ArrowUpRight className="w-4 h-4 text-black" />
               </a>
             </div>
           </div>

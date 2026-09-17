@@ -1,15 +1,8 @@
 import React from 'react';
-import { ArrowDown, Sparkles, Terminal, Cpu, Zap, Rotate3d, Compass } from 'lucide-react';
+import { ArrowDown, Sparkles, Rotate3d } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function Hero() {
-  const stats = [
-    { label: 'عضو ومبتكر شغوف', val: '+120', icon: Sparkles },
-    { label: 'مسارات تقنية متقدمة', val: '5', icon: Cpu },
-    { label: 'مشروع ونموذج ذكي', val: '+35', icon: Terminal },
-    { label: 'طاقة ابتكار وتطوير', val: '100%', icon: Zap },
-  ];
-
   return (
     <section
       id="hero"
@@ -52,7 +45,7 @@ export default function Hero() {
       </div>
 
       {/* Call to Actions */}
-      <div className="scroll-reveal flex flex-col sm:flex-row items-center gap-4 mb-16 w-full max-w-md sm:max-w-none justify-center">
+      <div className="scroll-reveal flex flex-col sm:flex-row items-center gap-4 mb-14 w-full max-w-md sm:max-w-none justify-center">
         <a
           href="#tracks"
           onClick={() => sound.click()}
@@ -74,31 +67,8 @@ export default function Hero() {
         </a>
       </div>
 
-      {/* Stats Counter Bar */}
-      <div className="scroll-reveal grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mx-auto">
-        {stats.map((item, index) => {
-          const Icon = item.icon;
-          return (
-            <div
-              key={index}
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition-all duration-300 flex flex-col items-center justify-center group shadow-lg"
-            >
-              <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 mb-2 group-hover:scale-110 transition-transform shadow-inner">
-                <Icon className="w-5 h-5" />
-              </div>
-              <span className="font-orbitron text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-cyan-300 mb-1">
-                {item.val}
-              </span>
-              <span className="text-xs sm:text-sm text-slate-300 font-medium">
-                {item.label}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
       {/* Mouse Roll / Scroll Down Interactive Indicator */}
-      <div className="scroll-reveal mt-16 flex flex-col items-center gap-2 text-slate-400">
+      <div className="scroll-reveal mt-4 flex flex-col items-center gap-2 text-slate-400">
         <div className="w-6 h-10 rounded-full border-2 border-cyan-400/50 flex justify-center p-1 shadow-[0_0_10px_rgba(0,229,255,0.2)]">
           <div className="w-1.5 h-2.5 bg-cyan-400 rounded-full animate-bounce" />
         </div>
