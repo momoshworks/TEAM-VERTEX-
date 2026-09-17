@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowDown, Sparkles, Rotate3d } from 'lucide-react';
+import { ArrowDown, Sparkles, Rotate3d, Bot } from 'lucide-react';
 import { sound } from '../utils/sound';
 
 export default function Hero() {
@@ -38,10 +38,11 @@ export default function Hero() {
         نبتكر حيث ينتهي خيال الآخرين — الفريق الطلابي والبحثي الرائد بكلية الذكاء الاصطناعي في <span className="text-cyan-300 font-semibold">جامعة الدلتا للعلوم والتكنولوجيا</span>، متخصصون في التعلم العميق، الروبوتات الذكية، وحلول المستقبل.
       </p>
 
-      {/* Interactive 3D Model Prompt Badge */}
-      <div className="scroll-reveal inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-semibold shadow-[0_0_15px_rgba(0,229,255,0.2)] mb-10 select-none">
-        <Rotate3d className="w-4 h-4 text-cyan-400 animate-spin" style={{ animationDuration: '8s' }} />
-        <span>اسحب بالماوس لتدوير مجسم VERTEX ثلاثي الأبعاد 360°</span>
+      {/* Interactive 3D Robot Brain Prompt Badge */}
+      <div className="scroll-reveal inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-panel border border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-semibold shadow-[0_0_15px_rgba(0,229,255,0.2)] mb-10 select-none">
+        <Bot className="w-4 h-4 text-cyan-400 animate-pulse" />
+        <span>عقل روبوت ذكي تفاعلي — اسحب بالماوس لتدويره وفحصه 360°</span>
+        <Rotate3d className="w-4 h-4 text-purple-400 animate-spin" style={{ animationDuration: '8s' }} />
       </div>
 
       {/* Call to Actions */}
