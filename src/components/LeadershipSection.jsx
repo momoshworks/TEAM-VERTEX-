@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
-import { Shield, Award, Terminal, Heart, Stethoscope, Sparkles, Users, UserCheck } from 'lucide-react';
+import {
+  Shield,
+  Award,
+  Terminal,
+  Heart,
+  Sparkles,
+  Users,
+  Code,
+  Cpu,
+  Layers,
+  Zap,
+  CheckCircle2,
+} from 'lucide-react';
 import { sound } from '../utils/sound';
 import mohamedShaabanImg from '../assets/mohamed-shaaban.webp';
 
 export default function LeadershipSection() {
   const [activeTab, setActiveTab] = useState('admins');
 
-  // Official VERTEX Group Admins (2 Admins)
+  // Official VERTEX Group Admins (3 Admins)
   const admins = [
     {
       name: 'eng, moaz deabes',
@@ -18,6 +30,18 @@ export default function LeadershipSection() {
       badge: 'Group Admin',
       specialty: 'Deep Learning & AI System Architecture',
       skills: ['PyTorch', 'System Architecture', 'Research Lead', 'Mentorship'],
+      status: 'Online & Active',
+    },
+    {
+      name: 'باهَـي (Bahey)',
+      title: 'Group Admin & Operations Director',
+      arabicRole: 'مسؤول الإدارة والعمليات التقنية',
+      emoji: '⚡',
+      bio: 'تنسيق العمل المشترك بين مختلف لجان الفريق، وضمان أعلى معايير الجودة والإنتاجية في الفعاليات والمسابقات والأنشطة الطلابية.',
+      bgOffset: '-8px -92px',
+      badge: 'Group Admin',
+      specialty: 'Technical Operations & Strategy',
+      skills: ['Agile Leadership', 'Hackathons Organizer', 'DevOps', 'Planning'],
       status: 'Online & Active',
     },
     {
@@ -36,33 +60,70 @@ export default function LeadershipSection() {
     },
   ];
 
-  // Official VERTEX Team Members (4 Members)
+  // Official Technical Team Leader
+  const technicalLeader = {
+    name: 'بشمهندس محمد شعبان (Eng. Mohamed Shaaban)',
+    title: 'Technical Team Leader & AI Specialist',
+    arabicRole: 'ليدر ورئيس الفريق التقني (Technical Lead)',
+    emoji: '👨‍💻🚀',
+    bio: 'قيادة وتوجيه الفرق الهندسية والبرمجية، الإشراف على جودة الأكواد والمشاريع التطبيقية، وبناء الأنظمة الذكية المستقلة داخل كلية الذكاء الاصطناعي بجامعة الدلتا للعلوم والتكنولوجيا.',
+    badge: 'ليدر الفريق التقني',
+    image: mohamedShaabanImg,
+    borderColor: 'border-cyan-400',
+    specialty: 'Autonomous Systems, Computer Vision & Deep Learning',
+    skills: [
+      'Technical Leadership',
+      'Computer Vision',
+      'Deep Learning',
+      'Software Architecture',
+      'C++',
+      'Python',
+    ],
+    status: 'Online & Active',
+  };
+
+  // Technical Team Pillars & Core Responsibilities
+  const technicalPillars = [
+    {
+      title: 'تطوير النماذج والأنظمة الذكية',
+      subtitle: 'AI Models & Smart Systems',
+      desc: 'بناء وتدريب شبكات التعلم العميق، خوارزميات الرؤية الحاسوبية، وتطبيقات معالجة اللغات الطبيعية الحديثة.',
+      icon: Cpu,
+      color: 'text-cyan-400',
+      bg: 'bg-cyan-500/10',
+      border: 'border-cyan-500/20',
+    },
+    {
+      title: 'إشراف وهندسة الأكواد',
+      subtitle: 'Code Review & Architecture',
+      desc: 'تطبيق أعلى المعايير الهندسية في بنية البرمجيات، مراجعة الأكواد لضمان الأمان والأداء العالي وقابلية التوسع.',
+      icon: Code,
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/20',
+    },
+    {
+      title: 'إدارة مشاريع الكلية التطبيقية',
+      subtitle: 'Applied Tech Projects',
+      desc: 'التطوير الفني والإشراف المباشر على منصات الفريق مثل "مشروع ضايع"، "مكتبة المشاريع"، وحلول الكلية.',
+      icon: Layers,
+      color: 'text-purple-400',
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/20',
+    },
+    {
+      title: 'المعسكرات والتدريب البرمجي',
+      subtitle: 'Technical Bootcamps',
+      desc: 'تنظيم الورش العملية ونقل الخبرات التقنية وتدريب الطلاب على أحدث مكتبات وتقنيات الذكاء الاصطناعي.',
+      icon: Zap,
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+    },
+  ];
+
+  // Official VERTEX Team Members (2 Members)
   const members = [
-    {
-      name: 'بشمهندس محمد شعبان (Eng. Mohamed Shaaban)',
-      title: 'Technical Lead & AI Specialist',
-      arabicRole: 'مسؤول تقني (Technical Lead)',
-      emoji: '👨‍💻🚀',
-      bio: 'قيادة وتطوير الحلول البرمجية التقنية، الأنظمة الذكية المستقلة، وتطبيقات الرؤية الحاسوبية في المشاريع العملية للكلية.',
-      badge: 'مسؤول تقني',
-      image: mohamedShaabanImg,
-      borderColor: 'border-cyan-400',
-      specialty: 'Autonomous Systems & Computer Vision',
-      skills: ['Computer Vision', 'Deep Learning', 'Software Architecture', 'C++'],
-      status: 'Active Member',
-    },
-    {
-      name: 'باهَـي (Bahey)',
-      title: 'Team Member',
-      arabicRole: 'عضو الفريق (Team Member)',
-      emoji: '⚡',
-      bio: 'المساهمة في العمليات التقنية والتنسيق بين فرق العمل في الفعاليات والأنشطة الطلابية والمسابقات.',
-      bgOffset: '-8px -92px',
-      badge: 'عضو الفريق',
-      specialty: 'Technical Operations & Strategy',
-      skills: ['Agile Coordination', 'Operations', 'DevOps', 'Planning'],
-      status: 'Active Member',
-    },
     {
       name: 'Ba7r (بحر)',
       title: 'Team Member & Bioinformatics Specialist',
@@ -94,7 +155,7 @@ export default function LeadershipSection() {
   const committees = [
     {
       name: 'اللجنة التقنية (Technical Committee)',
-      lead: 'مسؤولة عن التدريب، الكود، وورش العمل العملية وإشراف المشاريع.',
+      lead: 'بقيادة بشمهندس محمد شعبان — مسؤولة عن التدريب، الكود، وورش العمل العملية وإشراف المشاريع.',
       icon: Terminal,
       color: 'text-cyan-400',
     },
@@ -136,13 +197,13 @@ export default function LeadershipSection() {
 
       {/* Tabs */}
       <div className="scroll-reveal flex justify-center mb-12">
-        <div className="inline-flex p-1.5 rounded-2xl glass-panel border border-slate-800">
+        <div className="inline-flex flex-wrap justify-center p-1.5 rounded-2xl glass-panel border border-slate-800 gap-1.5 sm:gap-1">
           <button
             onClick={() => {
               sound.click();
               setActiveTab('admins');
             }}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'admins'
                 ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-black shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                 : 'text-slate-400 hover:text-white'
@@ -153,9 +214,22 @@ export default function LeadershipSection() {
           <button
             onClick={() => {
               sound.click();
+              setActiveTab('technical');
+            }}
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              activeTab === 'technical'
+                ? 'bg-gradient-to-r from-cyan-400 via-sky-500 to-blue-600 text-black shadow-[0_0_20px_rgba(0,229,255,0.6)]'
+                : 'text-cyan-400 hover:text-cyan-300'
+            }`}
+          >
+            💻 الفريق التقني (Technical Team)
+          </button>
+          <button
+            onClick={() => {
+              sound.click();
               setActiveTab('members');
             }}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'members'
                 ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)]'
                 : 'text-slate-400 hover:text-white'
@@ -168,7 +242,7 @@ export default function LeadershipSection() {
               sound.click();
               setActiveTab('committees');
             }}
-            className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'committees'
                 ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-[0_0_15px_rgba(157,78,221,0.4)]'
                 : 'text-slate-400 hover:text-white'
@@ -181,9 +255,9 @@ export default function LeadershipSection() {
 
       {/* Content Container with Scroll Reveal */}
       <div className="scroll-reveal min-h-[360px]">
-        {/* Admins Grid (4 Admins) */}
+        {/* Admins Grid (3 Admins: Moaz, Bahey, Niveen) */}
         {activeTab === 'admins' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto gap-8 animate-in fade-in zoom-in-95 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-8 animate-in fade-in zoom-in-95 duration-300">
             {admins.map((admin, idx) => (
               <div
                 key={idx}
@@ -207,7 +281,7 @@ export default function LeadershipSection() {
                         <div
                           className="w-20 h-20 rounded-full border-2 border-cyan-400 shadow-[0_0_15px_rgba(0,229,255,0.5)] bg-black group-hover:scale-105 transition-transform"
                           style={{
-                            backgroundImage: `url('/team-source.png')`,
+                            backgroundImage: `url('./team-source.png')`,
                             backgroundSize: '550px 240px',
                             backgroundPosition: admin.bgOffset,
                             backgroundRepeat: 'no-repeat',
@@ -267,6 +341,108 @@ export default function LeadershipSection() {
           </div>
         )}
 
+        {/* Technical Team Tab (Leader: Mohamed Shaaban & Technical Pillars) */}
+        {activeTab === 'technical' && (
+          <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-300">
+            {/* Spotlight Card for Technical Team Leader */}
+            <div
+              onMouseEnter={() => sound.hover()}
+              className="glass-panel rounded-3xl p-8 border-2 border-cyan-400/50 shadow-[0_0_30px_rgba(0,229,255,0.2)] glass-panel-hover relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10">
+                {/* Leader Photo */}
+                <div className="relative shrink-0">
+                  <img
+                    src={technicalLeader.image}
+                    alt={technicalLeader.name}
+                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl object-cover border-2 border-cyan-400 shadow-[0_0_25px_rgba(0,229,255,0.6)]"
+                  />
+                  <span className="absolute -bottom-2 -right-2 px-3 py-1 rounded-full bg-cyan-400 text-black font-extrabold text-[11px] uppercase tracking-wider shadow-[0_0_12px_#00e5ff]">
+                    LEADER
+                  </span>
+                </div>
+
+                {/* Leader Info */}
+                <div className="flex-1 text-center md:text-right">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-3">
+                    <div>
+                      <h3 className="font-grotesk text-2xl sm:text-3xl font-black text-white flex items-center gap-2 justify-center md:justify-start">
+                        <span>{technicalLeader.name}</span>
+                        <span>{technicalLeader.emoji}</span>
+                      </h3>
+                      <p className="text-cyan-400 font-mono text-sm font-semibold mt-1">
+                        {technicalLeader.title}
+                      </p>
+                      <p className="text-slate-300 text-xs mt-0.5">
+                        {technicalLeader.arabicRole}
+                      </p>
+                    </div>
+
+                    <span className="px-4 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-400/60 text-cyan-300 font-bold text-xs shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+                      {technicalLeader.badge}
+                    </span>
+                  </div>
+
+                  <p className="text-slate-200 text-sm sm:text-base leading-relaxed mb-6 max-w-3xl">
+                    {technicalLeader.bio}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 pt-4 border-t border-cyan-500/20 justify-center md:justify-start">
+                    {technicalLeader.skills.map((skill, sIdx) => (
+                      <span
+                        key={sIdx}
+                        className="px-3 py-1 rounded-lg text-xs font-mono bg-cyan-950/50 text-cyan-200 border border-cyan-500/30"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Technical Team Mission & Pillars */}
+            <div>
+              <div className="text-center mb-6">
+                <h4 className="text-lg font-bold text-white font-orbitron tracking-wide">
+                  محاور ومهام الفريق التقني — TECHNICAL TEAM PILLARS
+                </h4>
+                <p className="text-slate-400 text-xs sm:text-sm mt-1">
+                  الركائز الهندسية والبرمجية التي يشرف عليها الفريق التقني بكلية الذكاء الاصطناعي
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {technicalPillars.map((pillar, idx) => {
+                  const Icon = pillar.icon;
+                  return (
+                    <div
+                      key={idx}
+                      onMouseEnter={() => sound.hover()}
+                      className={`glass-panel p-5 rounded-2xl border ${pillar.border} glass-panel-hover flex flex-col justify-between`}
+                    >
+                      <div>
+                        <div
+                          className={`w-11 h-11 rounded-xl ${pillar.bg} ${pillar.color} flex items-center justify-center mb-4`}
+                        >
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <h5 className="font-bold text-white text-sm mb-1">{pillar.title}</h5>
+                        <span className="text-[11px] font-mono text-slate-400 block mb-2">
+                          {pillar.subtitle}
+                        </span>
+                        <p className="text-slate-300 text-xs leading-relaxed">{pillar.desc}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Members Grid (Ba7r & Rawan) */}
         {activeTab === 'members' && (
           <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 animate-in fade-in zoom-in-95 duration-300">
@@ -293,7 +469,7 @@ export default function LeadershipSection() {
                         <div
                           className="w-20 h-20 rounded-full border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] bg-black group-hover:scale-105 transition-transform"
                           style={{
-                            backgroundImage: `url('/team-source.png')`,
+                            backgroundImage: `url('./team-source.png')`,
                             backgroundSize: '550px 240px',
                             backgroundPosition: member.bgOffset,
                             backgroundRepeat: 'no-repeat',
