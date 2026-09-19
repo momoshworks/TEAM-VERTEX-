@@ -18,6 +18,12 @@ import {
   X,
   Phone,
   User,
+  Database,
+  ClipboardCopy,
+  Check,
+  Trash2,
+  ExternalLink,
+  FileText,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/sound';
@@ -25,8 +31,21 @@ import { sound } from '../utils/sound';
 export default function ServicesPage({ onNavigateHome }) {
   const [selectedService, setSelectedService] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [recordsModalOpen, setRecordsModalOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+
+  // Saved records in localStorage
+  const [savedRecords, setSavedRecords] = useState(() => {
+    try {
+      const raw = localStorage.getItem('vertex_service_records');
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
 
   // Form State
   const [formData, setFormData] = useState({
@@ -166,8 +185,8 @@ export default function ServicesPage({ onNavigateHome }) {
       a: 'نعم، بنسبة 100%! جميع الاستشارات، المراجعات البرمجية، وخرائط الطريق ودعم المشاريع تقدم كخدمة تطوعية مجانية بالكامل من أعضاء وقادة فريق VERTEX لزملائهم في كلية الذكاء الاصطناعي بجامعة الدلتا للعلوم والتكنولوجيا.',
     },
     {
-      q: 'كيف أطلب مساعدة أو استشارة لمشروعي؟',
-      a: 'ببساطة اضغط على زر "طلب الخدمة" في هذه الصفحة، واختر نوع الخدمة مع كتابة تفاصيل استفسارك ورقم الواتساب، وسيقوم مسؤول المسار أو الفريق التقني بالتواصل معك خلال 24 ساعة لتنسيق جلسة توجيه أو مراجعة الكود.',
+      q: 'كيف يتم تسجيل ومتابعة طلبي في جروب الواتساب؟',
+      a: 'بمجرد الضغط على إرسال الطلب، يقوم النظام أوتوماتيكياً بتوليد كود سجل رسمي (Record Ticket) وإرسال كافة تفاصيل اسمك وفرقتك وطلبك مباشرة إلى جروب واتساب الفريق على الرقم 01034191685، ليقوم مسؤول الخدمة بالرد الفوري عليك.',
     },
     {
       q: 'من يقوم بمراجعة الأكواد ومشاريع التخرج؟',
@@ -186,6 +205,7 @@ export default function ServicesPage({ onNavigateHome }) {
       service: serviceTitle || servicesList[0].title,
     }));
     setSubmitted(false);
+    setCurrentRecord(null);
     setModalOpen(true);
   };
 
@@ -193,24 +213,93 @@ export default function ServicesPage({ onNavigateHome }) {
     e.preventDefault();
     sound.click();
 
+    const recordId = 'VRX-' + Math.floor(1000 + Math.random() * 9000);
+    const dateObj = new Date();
+    const timestamp = dateObj.toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    // Format complete official record for WhatsApp
+    const formattedWhatsAppText = `📋 *سجل طلب خدمة جديد — فريق VERTEX AI*
+🏛️ *جامعة الدلتا للعلوم والتكنولوجيا — كلية الذكاء الاصطناعي*
+----------------------------------------
+🆔 *رقم السجل:* #${recordId}
+📌 *الخدمة المطلوبة:* ${formData.service}
+👤 *اسم الطالب:* ${formData.name}
+📱 *رقم الواتساب للتواصل:* ${formData.phone}
+🎓 *الفرقة الدراسية:* ${formData.year}
+📝 *تفاصيل الطلب / الاستفسار:*
+${formData.notes}
+----------------------------------------
+🕒 *توقيت التسجيل:* ${timestamp}
+✅ *تم التسجيل رسمياً وحفظه في سجلات خدمات VERTEX*`;
+
+    const waUrl = `https://wa.me/201034191685?text=${encodeURIComponent(formattedWhatsAppText)}`;
+
+    const newRecord = {
+      id: recordId,
+      name: formData.name,
+      phone: formData.phone,
+      year: formData.year,
+      service: formData.service,
+      notes: formData.notes,
+      timestamp,
+      fullMessage: formattedWhatsAppText,
+      waUrl,
+    };
+
+    // Save to state and localStorage
+    const updated = [newRecord, ...savedRecords];
+    setSavedRecords(updated);
+    try {
+      localStorage.setItem('vertex_service_records', JSON.stringify(updated));
+    } catch (err) {
+      console.error('Error saving record:', err);
+    }
+
+    setCurrentRecord(newRecord);
+    setSubmitted(true);
+
     // Fire Celebratory Confetti
     try {
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 90,
+        spread: 75,
         origin: { y: 0.6 },
-        colors: ['#00e5ff', '#a855f7', '#38bdf8', '#ffffff'],
+        colors: ['#00e5ff', '#10b981', '#a855f7', '#ffffff'],
       });
-    } catch {
-      // safe fallback
-    }
+    } catch {}
 
-    setSubmitted(true);
+    // Automatically open WhatsApp with the prefilled message
+    try {
+      window.open(waUrl, '_blank');
+    } catch {}
+  };
+
+  const copyText = (text, id = 'main') => {
+    sound.click();
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const clearAllRecords = () => {
+    if (window.confirm('هل أنت متأكد من مسح جميع السجلات المحفوظة محلياً؟')) {
+      sound.click();
+      setSavedRecords([]);
+      try {
+        localStorage.removeItem('vertex_service_records');
+      } catch {}
+    }
   };
 
   return (
     <div className="relative min-h-screen pt-28 pb-20 px-4 max-w-7xl mx-auto z-10">
-      {/* Top Breadcrumb / Return to Home */}
+      {/* Top Breadcrumb & Actions */}
       <div className="flex items-center justify-between gap-4 mb-8 flex-wrap">
         <button
           onClick={() => {
@@ -223,9 +312,26 @@ export default function ServicesPage({ onNavigateHome }) {
           <span>العودة للصفحة الرئيسية</span>
         </button>
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-cyan-300 text-xs font-semibold">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-          <span>كلية الذكاء الاصطناعي — جامعة الدلتا</span>
+        <div className="flex items-center gap-3">
+          {/* Records Archive Button */}
+          <button
+            onClick={() => {
+              sound.click();
+              setRecordsModalOpen(true);
+            }}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-emerald-500/40 text-emerald-300 hover:text-white hover:bg-emerald-500/20 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.2)]"
+          >
+            <Database className="w-3.5 h-3.5 text-emerald-400" />
+            <span>سجل طلبات الخدمات</span>
+            <span className="px-1.5 py-0.2 rounded-full bg-emerald-500 text-black text-[10px] font-extrabold">
+              {savedRecords.length}
+            </span>
+          </button>
+
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-400/40 text-cyan-300 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+            <span>كلية الذكاء الاصطناعي — جامعة الدلتا</span>
+          </div>
         </div>
       </div>
 
@@ -233,7 +339,7 @@ export default function ServicesPage({ onNavigateHome }) {
       <div className="text-center max-w-4xl mx-auto mb-16">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-cyan-950/80 via-purple-950/80 to-slate-900 border border-cyan-400/40 text-cyan-300 text-xs sm:text-sm font-bold shadow-[0_0_20px_rgba(0,229,255,0.2)] mb-5">
           <Sparkles className="w-4 h-4 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
-          <span>منظومة خدمات VERTEX المتكاملة</span>
+          <span>منظومة خدمات VERTEX المتكاملة • تسجيل مباشر عبر الواتساب</span>
         </div>
 
         <h1 className="font-orbitron text-3xl sm:text-5xl lg:text-6xl font-black text-white mb-6 tracking-wide">
@@ -244,7 +350,9 @@ export default function ServicesPage({ onNavigateHome }) {
         </h1>
 
         <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto mb-8 font-normal">
-          منصة دعم متكاملة موجهة لطلاب وباحثي كلية الذكاء الاصطناعي بـ <span className="text-cyan-300 font-semibold">جامعة الدلتا للعلوم والتكنولوجيا</span>، نسخر فيها خبرات قادة ومسؤولي التراكات لمساعدتك في مشاريعك وأكوادك ودراستك.
+          منصة دعم متكاملة موجهة لطلاب وباحثي كلية الذكاء الاصطناعي بـ{' '}
+          <span className="text-cyan-300 font-semibold">جامعة الدلتا للعلوم والتكنولوجيا</span>، يتم تسجيل كافة طلباتها وأرشفتها مباشرة في{' '}
+          <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span> للمتابعة اللحظية.
         </p>
 
         {/* Quick CTA to Request Service */}
@@ -254,18 +362,18 @@ export default function ServicesPage({ onNavigateHome }) {
             className="px-8 py-3.5 rounded-2xl font-bold text-sm text-black bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-[0_0_25px_rgba(0,229,255,0.5)] hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
           >
             <Send className="w-4 h-4" />
-            <span>طلب خدمة أو استشارة فورية</span>
+            <span>طلب خدمة وتسجيلها في واتساب الفريق</span>
           </button>
 
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSd8WhwP3BYktXm0xu2sRYI0N6fw5qszK41y5vksNX1aTL2xfg/viewform"
+            href="https://wa.me/201034191685"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => sound.click()}
-            className="px-6 py-3.5 rounded-2xl font-bold text-sm text-cyan-300 glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:bg-cyan-500/10 shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all flex items-center gap-2"
+            className="px-6 py-3.5 rounded-2xl font-bold text-sm text-emerald-300 glass-panel border border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all flex items-center gap-2"
           >
-            <Users className="w-4 h-4" />
-            <span>الانضمام للفريق كمرشد أو عضو</span>
+            <MessageSquare className="w-4 h-4" />
+            <span>جروب الواتساب المباشر (01034191685)</span>
           </a>
         </div>
       </div>
@@ -278,9 +386,9 @@ export default function ServicesPage({ onNavigateHome }) {
           <span className="text-[11px] text-slate-400">لجميع طلاب جامعة الدلتا</span>
         </div>
         <div className="glass-panel p-4 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
-          <Clock className="w-6 h-6 text-purple-400 mb-1.5" />
-          <span className="text-white font-bold text-sm">استجابة سريعة</span>
-          <span className="text-[11px] text-slate-400">رد خلال 24 - 48 ساعة</span>
+          <MessageSquare className="w-6 h-6 text-emerald-400 mb-1.5" />
+          <span className="text-white font-bold text-sm">أرشفة واتساب</span>
+          <span className="text-[11px] text-slate-400">تسجيل فوري في الجروب</span>
         </div>
         <div className="glass-panel p-4 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
           <Code2 className="w-6 h-6 text-blue-400 mb-1.5" />
@@ -288,9 +396,9 @@ export default function ServicesPage({ onNavigateHome }) {
           <span className="text-[11px] text-slate-400">بواسطة الفريق التقني</span>
         </div>
         <div className="glass-panel p-4 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
-          <Users className="w-6 h-6 text-emerald-400 mb-1.5" />
-          <span className="text-white font-bold text-sm">مجتمع داعم</span>
-          <span className="text-[11px] text-slate-400">تبادل خبرات مستمر</span>
+          <Clock className="w-6 h-6 text-purple-400 mb-1.5" />
+          <span className="text-white font-bold text-sm">استجابة سريعة</span>
+          <span className="text-[11px] text-slate-400">رد خلال 24 - 48 ساعة</span>
         </div>
       </div>
 
@@ -301,7 +409,7 @@ export default function ServicesPage({ onNavigateHome }) {
             قائمة الخدمات المتاحة — AVAILABLE SERVICES
           </h2>
           <p className="text-slate-400 text-sm">
-            اختر الخدمة التي تحتاجها واطلع على تفاصيلها وقدم طلبك مباشرة
+            اختر الخدمة التي تحتاجها ليتم فتح رسالة تسجيلها رسمياً في واتساب الفريق
           </p>
         </div>
 
@@ -368,7 +476,7 @@ export default function ServicesPage({ onNavigateHome }) {
                     onClick={() => openRequestModal(srv.title)}
                     className="w-full py-2.5 rounded-xl font-bold text-xs text-cyan-300 glass-panel border border-cyan-500/30 hover:border-cyan-300 hover:bg-cyan-500/20 shadow-[0_0_15px_rgba(0,229,255,0.15)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    <span>طلب هذه الخدمة الآن</span>
+                    <span>تسجيل الطلب عبر الواتساب</span>
                     <Send className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -434,7 +542,7 @@ export default function ServicesPage({ onNavigateHome }) {
           هل لديك فكرة أو خدمة جديدة تقترح إضافتها؟
         </h3>
         <p className="text-slate-300 text-sm max-w-xl mx-auto mb-6">
-          فريقنا دائماً متواجد لخدمة الكلية، وإذا كانت لديك فكرة مبادرة أو خدمة يحتاجها الطلاب، يسعدنا سماعها والتعاون لتنفيذها!
+          فريقنا دائماً متواجد لخدمة الكلية، وإذا كانت لديك فكرة مبادرة أو خدمة يحتاجها الطلاب، يسعدنا سماعها والتعاون لتنفيذها فوراً!
         </p>
 
         <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -480,7 +588,7 @@ export default function ServicesPage({ onNavigateHome }) {
                   </h3>
                 </div>
                 <p className="text-xs text-slate-400 mb-6">
-                  املأ بياناتك وسيتواصل معك مسؤول الخدمة المتخصص من فريق VERTEX في أسرع وقت.
+                  املأ بياناتك وسيتم تسجيل السجل وفتحه تلقائياً في <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span> لسرعة المتابعة.
                 </p>
 
                 {/* Service Select */}
@@ -576,49 +684,200 @@ export default function ServicesPage({ onNavigateHome }) {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl font-bold text-sm text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-[0_0_20px_rgba(0,229,255,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-3.5 rounded-xl font-bold text-sm text-black bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 hover:from-emerald-300 hover:to-blue-400 shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>إرسال طلب الخدمة الآن</span>
+                  <MessageSquare className="w-4 h-4" />
+                  <span>تسجيل السجل وإرساله إلى واتساب الفريق</span>
                 </button>
               </form>
             ) : (
-              <div className="text-center py-6">
+              <div className="text-center py-6 animate-in zoom-in-95 duration-200">
                 <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto mb-4 animate-bounce">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="font-orbitron font-bold text-2xl text-white mb-2">
-                  تم استلام طلبك بنجاح! 🎉
+                  تم تسجيل السجل بنجاح! 🎉
                 </h3>
-                <p className="text-slate-300 text-sm leading-relaxed mb-6 max-w-sm mx-auto">
-                  شكراً لك يا <span className="text-cyan-300 font-bold">{formData.name}</span>! تم تسجيل طلبك لـ{' '}
-                  <span className="text-purple-300 font-semibold">{formData.service}</span>، وسيقوم مسؤول الخدمة بالتواصل معك عبر الواتساب على{' '}
-                  <span className="font-mono text-cyan-400">{formData.phone}</span> قريباً.
+                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-sm mx-auto">
+                  تم تسجيل طلبك برقم <span className="font-mono text-cyan-400 font-bold">#{currentRecord?.id}</span>، وتجهيزه للإرسال مباشرة إلى <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span>.
                 </p>
+
+                {/* Ticket Card Preview */}
+                <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-right mb-6 text-xs space-y-1.5 font-mono">
+                  <div className="flex justify-between border-b border-slate-800 pb-1.5 mb-1.5 text-slate-400">
+                    <span>رقم السجل: #{currentRecord?.id}</span>
+                    <span>{currentRecord?.timestamp}</span>
+                  </div>
+                  <div className="text-white">
+                    <span className="text-cyan-400 font-bold">الاسم:</span> {currentRecord?.name}
+                  </div>
+                  <div className="text-white">
+                    <span className="text-cyan-400 font-bold">الخدمة:</span> {currentRecord?.service}
+                  </div>
+                  <div className="text-white">
+                    <span className="text-cyan-400 font-bold">الفرقة:</span> {currentRecord?.year}
+                  </div>
+                  <div className="text-slate-300 pt-1 border-t border-slate-800/80 text-[11px]">
+                    <span className="text-cyan-400 font-bold">التفاصيل:</span> {currentRecord?.notes}
+                  </div>
+                </div>
 
                 <div className="flex flex-col gap-3">
                   <a
-                    href={`https://wa.me/201034191685?text=${encodeURIComponent(
-                      `مرحباً فريق VERTEX، أنا ${formData.name} (${formData.year})، قمت بطلب خدمة: ${formData.service}`
-                    )}`}
+                    href={currentRecord?.waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full py-3 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-500 flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                    className="w-full py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-emerald-600 hover:bg-emerald-500 flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)]"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>تأكيد المتابعة السريعة عبر واتساب الفريق (01034191685)</span>
+                    <span>إرسال / إعادة فتح في جروب الواتساب</span>
                   </a>
+
+                  <button
+                    onClick={() => copyText(currentRecord?.fullMessage, 'modal')}
+                    className="w-full py-2.5 rounded-xl font-semibold text-xs text-slate-300 glass-panel border border-slate-700 hover:border-cyan-400 flex items-center justify-center gap-2 cursor-pointer transition-all"
+                  >
+                    {copiedId === 'modal' ? (
+                      <>
+                        <Check className="w-4 h-4 text-emerald-400" />
+                        <span className="text-emerald-400">تم نسخ السجل بالكامل!</span>
+                      </>
+                    ) : (
+                      <>
+                        <ClipboardCopy className="w-4 h-4" />
+                        <span>نسخ نص السجل للمشاركة</span>
+                      </>
+                    )}
+                  </button>
 
                   <button
                     onClick={() => {
                       sound.click();
                       setModalOpen(false);
+                      setRecordsModalOpen(true);
                     }}
-                    className="w-full py-2.5 rounded-xl font-semibold text-xs text-slate-300 glass-panel border border-slate-700 hover:border-cyan-400 cursor-pointer"
+                    className="w-full py-2 text-slate-400 hover:text-cyan-300 text-xs font-semibold cursor-pointer"
                   >
-                    إغلاق النافذة
+                    عرض أرشيف السجلات المسجلة ({savedRecords.length})
                   </button>
                 </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Saved Records Archive Modal */}
+      {recordsModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-2xl glass-panel p-6 sm:p-8 rounded-3xl border-2 border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.25)] max-h-[85vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+              <div className="flex items-center gap-2 text-right">
+                <Database className="w-5 h-5 text-emerald-400" />
+                <h3 className="font-orbitron font-bold text-lg sm:text-xl text-white">
+                  أرشيف سجلات طلبات الخدمات ({savedRecords.length})
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  sound.click();
+                  setRecordsModalOpen(false);
+                }}
+                className="p-1.5 rounded-full glass-panel border border-slate-700 text-slate-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* List of Records */}
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-right">
+              {savedRecords.length === 0 ? (
+                <div className="text-center py-12 text-slate-400">
+                  <FileText className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <p className="text-sm font-semibold">لا توجد سجلات محفوظة حالياً.</p>
+                  <p className="text-xs text-slate-500 mt-1">
+                    عند تقديم أي طالب لطلب خدمة، سيتم أرشفته هنا تلقائياً وإرساله للواتساب.
+                  </p>
+                </div>
+              ) : (
+                savedRecords.map((rec) => (
+                  <div
+                    key={rec.id}
+                    className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 hover:border-emerald-500/40 transition-all flex flex-col gap-3"
+                  >
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-mono text-xs font-bold">
+                          #{rec.id}
+                        </span>
+                        <span className="text-white font-bold text-sm">{rec.name}</span>
+                        <span className="text-slate-400 text-xs">({rec.year})</span>
+                      </div>
+                      <span className="text-[11px] font-mono text-slate-500">{rec.timestamp}</span>
+                    </div>
+
+                    <div className="text-xs text-cyan-300 font-semibold">
+                      الخدمة: <span className="text-white font-normal">{rec.service}</span>
+                    </div>
+
+                    <div className="text-xs text-slate-300 bg-black/40 p-2.5 rounded-xl border border-slate-800/80">
+                      {rec.notes}
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3 pt-2 border-t border-slate-800/60 flex-wrap">
+                      <div className="text-xs font-mono text-emerald-400">
+                        📱 هاتف الطالب: {rec.phone}
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => copyText(rec.fullMessage, rec.id)}
+                          className="px-3 py-1.5 rounded-lg glass-panel border border-slate-700 hover:border-cyan-400 text-slate-300 text-xs flex items-center gap-1.5 cursor-pointer"
+                        >
+                          {copiedId === rec.id ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
+                              <span className="text-emerald-400">تم النسخ</span>
+                            </>
+                          ) : (
+                            <>
+                              <ClipboardCopy className="w-3.5 h-3.5" />
+                              <span>نسخ</span>
+                            </>
+                          )}
+                        </button>
+
+                        <a
+                          href={rec.waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)] transition-all"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>إرسال للواتساب</span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            {savedRecords.length > 0 && (
+              <div className="pt-4 border-t border-slate-800 flex items-center justify-between mt-4">
+                <button
+                  onClick={clearAllRecords}
+                  className="px-3 py-1.5 rounded-lg text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>مسح السجلات</span>
+                </button>
+
+                <span className="text-[11px] text-slate-400">
+                  جميع السجلات تحفظ محلياً ويتم إرسالها لرقم الواتساب: 01034191685
+                </span>
               </div>
             )}
           </div>

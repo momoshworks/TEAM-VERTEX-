@@ -2,7 +2,12 @@ import React from 'react';
 import { Sparkles, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function Footer({ currentPage = 'home', onNavigate }) {
+export default function Footer({
+  currentPage = 'home',
+  onNavigate,
+  onOpenAdminLogin,
+  isAdminLoggedIn = false,
+}) {
   const FORM_URL =
     'https://docs.google.com/forms/d/e/1FAIpQLSd8WhwP3BYktXm0xu2sRYI0N6fw5qszK41y5vksNX1aTL2xfg/viewform';
 
@@ -104,6 +109,20 @@ export default function Footer({ currentPage = 'home', onNavigate }) {
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
             </a>
             <a
+              href="#/events"
+              onClick={(e) => {
+                e.preventDefault();
+                sound.click();
+                if (onNavigate) onNavigate('events');
+                else window.location.hash = '/events';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-purple-400 font-bold hover:text-purple-300 transition-colors flex items-center gap-1"
+            >
+              <span>الفعاليات والورش</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+            </a>
+            <a
               href="#about"
               onClick={(e) => handleSectionLink(e, '#about')}
               className="hover:text-cyan-300 transition-colors"
@@ -138,6 +157,20 @@ export default function Footer({ currentPage = 'home', onNavigate }) {
             >
               انضم إلينا
             </a>
+            <button
+              onClick={() => {
+                sound.click();
+                if (isAdminLoggedIn) {
+                  if (onNavigate) onNavigate('admin');
+                  else window.location.hash = '/admin';
+                } else if (onOpenAdminLogin) {
+                  onOpenAdminLogin();
+                }
+              }}
+              className="text-slate-500 hover:text-cyan-300 transition-colors cursor-pointer"
+            >
+              {isAdminLoggedIn ? 'لوحة تحكم الإدارة' : 'دخول الأدمن'}
+            </button>
           </div>
 
           <div className="flex items-center gap-3">

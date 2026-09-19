@@ -48,41 +48,34 @@ export default function Vertex3DScene() {
       alpha: true,
       powerPreference: 'high-performance',
     });
+    // Optimize pixel ratio for smooth performance on weak and mobile GPUs
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.3;
     container.appendChild(renderer.domElement);
 
-    // 2. High-Tech Cyber Lighting
-    const ambientLight = new THREE.AmbientLight(0x081022, 3.0);
+    // 2. High-Tech Cyber Lighting (Optimized for low-end GPUs)
+    const ambientLight = new THREE.AmbientLight(0x0a1628, 2.5);
     scene.add(ambientLight);
 
-    const cyanLight = new THREE.PointLight(0x00e5ff, 6, 45);
-    cyanLight.position.set(7, 5, 8);
+    const cyanLight = new THREE.PointLight(0x00e5ff, 5, 35);
+    cyanLight.position.set(6, 4, 7);
     scene.add(cyanLight);
 
-    const purpleLight = new THREE.PointLight(0xa855f7, 6, 45);
-    purpleLight.position.set(-7, -4, 8);
+    const purpleLight = new THREE.PointLight(0xa855f7, 5, 35);
+    purpleLight.position.set(-6, -4, 7);
     scene.add(purpleLight);
-
-    const blueDirLight = new THREE.DirectionalLight(0x38bdf8, 2.5);
-    blueDirLight.position.set(0, 12, 10);
-    scene.add(blueDirLight);
-
-    const rimLight = new THREE.PointLight(0x6366f1, 5, 35);
-    rimLight.position.set(0, -6, -5);
-    scene.add(rimLight);
 
     // 3. Central Master Group for 3D Cybernetic Robot Brain
     const masterCore = new THREE.Group();
     coreGroupRef.current = masterCore;
     scene.add(masterCore);
 
-    // --- Helper to build a procedural Brain Hemisphere with Gyri & Sulci folds ---
+    // --- Helper to build a lightweight procedural Brain Hemisphere with Gyri & Sulci folds ---
     const createHemisphereGeom = (isLeft) => {
-      // 38 segments for high-fidelity organic curvature
-      const geom = new THREE.SphereGeometry(2.35, 42, 42);
+      // 24x24 segments (Super lightweight for low-end devices, retains realistic organic curvature)
+      const geom = new THREE.SphereGeometry(2.35, 24, 24);
       const pos = geom.attributes.position;
 
       for (let i = 0; i < pos.count; i++) {
@@ -90,42 +83,39 @@ export default function Vertex3DScene() {
         let y = pos.getY(i);
         let z = pos.getZ(i);
 
-        // Anatomical Brain Dimensions:
-        // - Elongated front-to-back (Z)
-        // - Moderate height (Y)
-        // - Specific lateral hemisphere width (X)
+        // Anatomical Brain Dimensions
         x *= 0.82;
         y *= 0.96;
         z *= 1.28;
 
-        // Medial Sagittal Fissure (Separation between left & right brain hemispheres)
+        // Medial Sagittal Fissure
         if (isLeft) {
-          if (x > 0.05) x *= 0.2; // Flatten inner face
+          if (x > 0.05) x *= 0.2;
           x -= 0.68;
         } else {
-          if (x < -0.05) x *= 0.2; // Flatten inner face
+          if (x < -0.05) x *= 0.2;
           x += 0.68;
         }
 
-        // Temporal Lobe Bulge (lower-lateral sides)
+        // Temporal Lobe Bulge
         if (y < 0.1 && y > -1.3 && z > -0.6 && z < 0.9) {
           x += isLeft ? -0.28 : 0.28;
         }
 
-        // Frontal Lobe Expansion (anterior rounded forehead)
+        // Frontal Lobe Expansion
         if (z > 0.8 && y > -0.2) {
           z += 0.22;
           y += 0.12;
         }
 
-        // Cerebellum (posterior-inferior lower brain lobes)
+        // Cerebellum
         if (y < -0.7 && z < -0.4) {
           y -= 0.28;
           z -= 0.18;
           x *= 0.88;
         }
 
-        // Procedural Gyri & Sulci (Realistic Brain Convolutions)
+        // Procedural Gyri & Sulci
         const fold1 = Math.sin(x * 5.4) * Math.sin(y * 5.4) * Math.cos(z * 5.4);
         const fold2 = Math.sin(x * 11.2 + z * 10.5) * 0.5;
         const fold3 = Math.cos(y * 14.0 + x * 9.0) * 0.3;
@@ -142,24 +132,22 @@ export default function Vertex3DScene() {
       return geom;
     };
 
-    // --- Left Hemisphere (Cyber Cyan) ---
+    // --- Left Hemisphere (Cyber Cyan, Optimized Standard Material) ---
     const leftGeom = createHemisphereGeom(true);
-    const leftMat = new THREE.MeshPhysicalMaterial({
-      color: 0x061838,
+    const leftMat = new THREE.MeshStandardMaterial({
+      color: 0x051329,
       emissive: 0x0284c7,
-      emissiveIntensity: 0.5,
-      roughness: 0.18,
-      metalness: 0.9,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
+      emissiveIntensity: 0.6,
+      roughness: 0.25,
+      metalness: 0.85,
       transparent: true,
       opacity: 0.88,
     });
     const leftHemisphere = new THREE.Mesh(leftGeom, leftMat);
     masterCore.add(leftHemisphere);
 
-    // Left Cybernetic Wireframe
-    const leftWireGeom = new THREE.WireframeGeometry(leftGeom);
+    // Lightweight Cybernetic Contours (EdgesGeometry instead of heavy full Wireframe)
+    const leftWireGeom = new THREE.EdgesGeometry(leftGeom, 18);
     const leftWireMat = new THREE.LineBasicMaterial({
       color: 0x00e5ff,
       transparent: true,
@@ -168,24 +156,22 @@ export default function Vertex3DScene() {
     const leftWire = new THREE.LineSegments(leftWireGeom, leftWireMat);
     leftHemisphere.add(leftWire);
 
-    // --- Right Hemisphere (Electric Violet / Purple) ---
+    // --- Right Hemisphere (Electric Violet / Purple, Optimized) ---
     const rightGeom = createHemisphereGeom(false);
-    const rightMat = new THREE.MeshPhysicalMaterial({
-      color: 0x210838,
+    const rightMat = new THREE.MeshStandardMaterial({
+      color: 0x1b072e,
       emissive: 0x9333ea,
-      emissiveIntensity: 0.5,
-      roughness: 0.18,
-      metalness: 0.9,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
+      emissiveIntensity: 0.6,
+      roughness: 0.25,
+      metalness: 0.85,
       transparent: true,
       opacity: 0.88,
     });
     const rightHemisphere = new THREE.Mesh(rightGeom, rightMat);
     masterCore.add(rightHemisphere);
 
-    // Right Cybernetic Wireframe
-    const rightWireGeom = new THREE.WireframeGeometry(rightGeom);
+    // Right Cybernetic Contours
+    const rightWireGeom = new THREE.EdgesGeometry(rightGeom, 18);
     const rightWireMat = new THREE.LineBasicMaterial({
       color: 0xc084fc,
       transparent: true,
@@ -301,11 +287,11 @@ export default function Vertex3DScene() {
     spineGroup.position.set(0, -2.1, -0.2);
     masterCore.add(spineGroup);
 
-    // Stacked Cervical Cyber Rings
+    // Stacked Cervical Cyber Rings (Optimized Segments)
     const ringCount = 5;
     for (let i = 0; i < ringCount; i++) {
       const ringRadius = 0.7 - i * 0.08;
-      const spineRingGeom = new THREE.TorusGeometry(ringRadius, 0.07, 16, 40);
+      const spineRingGeom = new THREE.TorusGeometry(ringRadius, 0.07, 8, 20);
       const spineRingMat = new THREE.MeshStandardMaterial({
         color: 0x1e293b,
         emissive: i % 2 === 0 ? 0x00e5ff : 0x9333ea,
@@ -330,13 +316,13 @@ export default function Vertex3DScene() {
     const cableGeom = new THREE.BufferGeometry().setFromPoints(cablePoints);
     const cableMat = new THREE.LineBasicMaterial({
       color: 0x00e5ff,
-      linewidth: 2,
+      linewidth: 1.5,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.85,
     });
     spineGroup.add(new THREE.LineSegments(cableGeom, cableMat));
 
-    // --- Holographic Gyroscopic Rings (Orbiting Data Rings) ---
+    // --- Holographic Gyroscopic Rings (Orbiting Data Rings, Optimized Segments) ---
     // Ring 1: Cyan Equatorial Ring
     const orbitGroup1 = new THREE.Group();
     orbitGroup1Ref.current = orbitGroup1;
@@ -344,7 +330,7 @@ export default function Vertex3DScene() {
     orbitGroup1.rotation.y = -Math.PI / 10;
     masterCore.add(orbitGroup1);
 
-    const gyroRingGeom1 = new THREE.TorusGeometry(4.4, 0.045, 16, 120);
+    const gyroRingGeom1 = new THREE.TorusGeometry(4.4, 0.04, 8, 48);
     const gyroRingMat1 = new THREE.MeshStandardMaterial({
       color: 0x00e5ff,
       emissive: 0x00e5ff,
@@ -356,7 +342,7 @@ export default function Vertex3DScene() {
     orbitGroup1.add(gyroRingMesh1);
 
     // Orbiting Electron / Data Packet 1
-    const electronGeom1 = new THREE.SphereGeometry(0.3, 20, 20);
+    const electronGeom1 = new THREE.SphereGeometry(0.28, 10, 10);
     const electronMat1 = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       emissive: 0x00e5ff,
@@ -374,7 +360,7 @@ export default function Vertex3DScene() {
     orbitGroup2.rotation.z = Math.PI / 6;
     masterCore.add(orbitGroup2);
 
-    const gyroRingGeom2 = new THREE.TorusGeometry(4.7, 0.035, 16, 120);
+    const gyroRingGeom2 = new THREE.TorusGeometry(4.7, 0.03, 8, 48);
     const gyroRingMat2 = new THREE.MeshStandardMaterial({
       color: 0xc084fc,
       emissive: 0x9333ea,
@@ -386,7 +372,7 @@ export default function Vertex3DScene() {
     orbitGroup2.add(gyroRingMesh2);
 
     // Orbiting Electron / Data Packet 2
-    const electronGeom2 = new THREE.SphereGeometry(0.24, 16, 16);
+    const electronGeom2 = new THREE.SphereGeometry(0.22, 10, 10);
     const electronMat2 = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       emissive: 0xc084fc,
@@ -488,11 +474,17 @@ export default function Vertex3DScene() {
 
     window.addEventListener('resize', handleResize);
 
-    // 6. Animation Render Loop
+    // 6. Animation Render Loop (with Tab Visibility Pause to save battery & CPU)
     let animationId;
+    let isVisible = true;
+    const handleVisibility = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
+      if (!isVisible) return;
       const elapsed = performance.now() * 0.001;
 
       // Smooth mouse lerping
@@ -586,6 +578,7 @@ export default function Vertex3DScene() {
       window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibility);
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }

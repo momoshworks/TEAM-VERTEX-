@@ -11,6 +11,7 @@ import {
   Layers,
   Zap,
   CheckCircle2,
+  BookOpen,
 } from 'lucide-react';
 import { sound } from '../utils/sound';
 import mohamedShaabanImg from '../assets/mohamed-shaaban.webp';
@@ -122,32 +123,96 @@ export default function LeadershipSection() {
     },
   ];
 
-  // Official VERTEX Team Members (2 Members)
+  // Official VERTEX Team Members — Academic Subjects Support (5 Members, No Job Titles)
   const members = [
     {
-      name: 'Ba7r (بحر)',
-      title: 'Team Member & Bioinformatics Specialist',
-      arabicRole: 'عضو الفريق — مسار الذكاء الاصطناعي الحيوي والطبي',
-      emoji: '🩺',
-      bio: 'التركيز على تطبيقات الذكاء الاصطناعي في العلوم الحيوية والرعاية الصحية، تحليل البيانات البيولوجية والمعلوماتية الحيوية.',
-      bgOffset: '-8px -174px',
-      badge: 'عضو الفريق',
-      specialty: 'Bioinformatics & Medical AI Analysis',
-      skills: ['Bioinformatics', 'Medical AI', 'Biological Data', 'Genomics'],
+      name: 'Rancy (رانسي)',
+      role: 'عضو الفريق — كلية الذكاء الاصطناعي',
+      subtitle: 'دعم المقررات الأكاديمية • Academic Courses',
+      emoji: '🧠✨',
+      bio: 'المساعدة الأكاديمية وشرح المفاهيم المعقدة لطلاب الكلية في مقررات الذكاء الاصطناعي الأساسية، خوارزميات التعلم العميق، والشبكات العصبية.',
+      badge: 'المواد الأكاديمية',
+      initials: 'RN',
+      avatarGradient: 'from-rose-500 via-pink-600 to-purple-600',
+      borderColor: 'border-pink-400',
+      subjects: [
+        'تعلم الآلة (Machine Learning)',
+        'التعلم العميق (Deep Learning)',
+        'الشبكات العصبية (Neural Networks)',
+        'أساسيات الذكاء الاصطناعي (AI Fundamentals)',
+      ],
       status: 'Active Member',
     },
     {
-      name: 'بشمهندسة روان (Eng. Rawan)',
-      title: 'Team Member & Data Science Specialist',
-      arabicRole: 'عضوة الفريق — مسار علم وتحليل البيانات',
-      emoji: '👩‍💻💡',
-      bio: 'المساهمة في مشاريع تحليل البيانات واستخراج الأنماط الإحصائية، وبناء نماذج التنبؤ وتطوير الحلول البرمجية.',
-      badge: 'عضو الفريق',
-      initials: 'R',
-      avatarGradient: 'from-emerald-500 via-teal-600 to-blue-600',
+      name: 'Donia (دنيا)',
+      role: 'عضو الفريق — كلية الذكاء الاصطناعي',
+      subtitle: 'دعم المقررات الأكاديمية • Academic Courses',
+      emoji: '📊💡',
+      bio: 'شرح وتبسيط مقررات علم وتحليل البيانات والإحصاء الاحتمالي، والمساعدة في التطبيقات العملية لقواعد البيانات ونماذج معالجة اللغات الطبيعية.',
+      badge: 'المواد الأكاديمية',
+      initials: 'DN',
+      avatarGradient: 'from-cyan-500 via-teal-600 to-blue-600',
+      borderColor: 'border-cyan-400',
+      subjects: [
+        'علم وتحليل البيانات (Data Science)',
+        'الاحتمالات والإحصاء (Probability & Stats)',
+        'نظم قواعد البيانات (Database Systems)',
+        'معالجة اللغات الطبيعية (NLP)',
+      ],
+      status: 'Active Member',
+    },
+    {
+      name: 'Kareem (كريم)',
+      role: 'عضو الفريق — كلية الذكاء الاصطناعي',
+      subtitle: 'دعم المقررات الأكاديمية • Academic Courses',
+      emoji: '⚡💻',
+      bio: 'تأسيس الطلاب في المواد البرمجية الجوهرية، هياكل البيانات، تحليل الخوارزميات، وحل المشكلات البرمجية بلغة بايثون والمفاهيم الكائنية.',
+      badge: 'المواد الأكاديمية',
+      initials: 'KR',
+      avatarGradient: 'from-amber-500 via-orange-600 to-red-600',
+      borderColor: 'border-amber-400',
+      subjects: [
+        'هياكل البيانات والخوارزميات (Data Structures)',
+        'برمجة بايثون المتقدمة (Advanced Python)',
+        'البرمجة كائنية التوجه (OOP)',
+        'حل المشكلات البرمجية (Problem Solving)',
+      ],
+      status: 'Active Member',
+    },
+    {
+      name: 'Tommy (تومي)',
+      role: 'عضو الفريق — كلية الذكاء الاصطناعي',
+      subtitle: 'دعم المقررات الأكاديمية • Academic Courses',
+      emoji: '👁️📐',
+      bio: 'دعم الطلاب في مقررات الرؤية الحاسوبية ومعالجة الصور الرقمية، بالإضافة إلى تبسيط مقررات الجبر الخطي والرياضيات التطبيقية للذكاء الاصطناعي.',
+      badge: 'المواد الأكاديمية',
+      initials: 'TM',
+      avatarGradient: 'from-purple-500 via-indigo-600 to-blue-600',
+      borderColor: 'border-purple-400',
+      subjects: [
+        'الرؤية الحاسوبية (Computer Vision)',
+        'معالجة الصور الرقمية (Image Processing)',
+        'الجبر الخطي (Linear Algebra)',
+        'رياضيات الذكاء الاصطناعي (Math for AI)',
+      ],
+      status: 'Active Member',
+    },
+    {
+      name: 'Abdullah (عبدالله)',
+      role: 'عضو الفريق — كلية الذكاء الاصطناعي',
+      subtitle: 'دعم المقررات الأكاديمية • Academic Courses',
+      emoji: '🛡️☁️',
+      bio: 'إرشاد الزملاء في مقررات هندسة البرمجيات، بنية أنظمة التشغيل، أسس الحوسبة السحابية، ومفاهيم أمن وسرية المعلومات والأنظمة الذكية.',
+      badge: 'المواد الأكاديمية',
+      initials: 'AB',
+      avatarGradient: 'from-emerald-500 via-teal-600 to-cyan-600',
       borderColor: 'border-emerald-400',
-      specialty: 'Data Science & Analytics',
-      skills: ['Data Science', 'Data Analysis', 'Statistics', 'Big Data'],
+      subjects: [
+        'هندسة البرمجيات (Software Engineering)',
+        'أنظمة التشغيل (Operating Systems)',
+        'أمن المعلومات (Cyber Security)',
+        'الحوسبة السحابية (Cloud Computing)',
+      ],
       status: 'Active Member',
     },
   ];
@@ -443,47 +508,36 @@ export default function LeadershipSection() {
           </div>
         )}
 
-        {/* Members Grid (Ba7r & Rawan) */}
+        {/* Members Grid (5 Members — Academic Subjects, No Job Titles) */}
         {activeTab === 'members' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 animate-in fade-in zoom-in-95 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6 animate-in fade-in zoom-in-95 duration-300">
             {members.map((member, idx) => (
               <div
                 key={idx}
                 onMouseEnter={() => sound.hover()}
-                className="glass-panel rounded-3xl p-7 border border-emerald-500/20 hover:border-emerald-400/50 glass-panel-hover flex flex-col justify-between group relative overflow-hidden"
+                className="glass-panel rounded-3xl p-6 border border-emerald-500/20 hover:border-emerald-400/50 glass-panel-hover flex flex-col justify-between group relative overflow-hidden"
               >
                 {/* Background gradient orb */}
                 <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform" />
 
                 <div>
                   {/* Avatar rendering */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-5">
                     <div className="relative">
                       {member.image ? (
                         <img
                           src={member.image}
                           alt={member.name}
-                          className="w-20 h-20 rounded-full object-cover border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:scale-105 transition-transform"
-                        />
-                      ) : member.bgOffset ? (
-                        <div
-                          className="w-20 h-20 rounded-full border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] bg-black group-hover:scale-105 transition-transform"
-                          style={{
-                            backgroundImage: `url('./team-source.png')`,
-                            backgroundSize: '550px 240px',
-                            backgroundPosition: member.bgOffset,
-                            backgroundRepeat: 'no-repeat',
-                          }}
-                          title={member.name}
+                          className="w-18 h-18 rounded-full object-cover border-2 border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:scale-105 transition-transform"
                         />
                       ) : (
                         <div
-                          className={`w-20 h-20 rounded-full border-2 ${member.borderColor} shadow-[0_0_15px_rgba(16,185,129,0.4)] bg-gradient-to-br ${member.avatarGradient} flex items-center justify-center text-white font-orbitron font-extrabold text-2xl group-hover:scale-105 transition-transform shadow-inner`}
+                          className={`w-16 h-16 rounded-full border-2 ${member.borderColor} shadow-[0_0_15px_rgba(16,185,129,0.4)] bg-gradient-to-br ${member.avatarGradient} flex items-center justify-center text-white font-orbitron font-extrabold text-xl group-hover:scale-105 transition-transform shadow-inner`}
                         >
                           <span>{member.initials}</span>
                         </div>
                       )}
-                      <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-cyan-400 border-2 border-black shadow-[0_0_8px_#00e5ff]" />
+                      <span className="absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-black shadow-[0_0_8px_#00e5ff]" />
                     </div>
 
                     <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">
@@ -491,35 +545,39 @@ export default function LeadershipSection() {
                     </span>
                   </div>
 
-                  {/* Name & Titles */}
+                  {/* Name & Role (No Corporate Job Titles) */}
                   <div className="mb-4">
-                    <h3 className="font-grotesk text-xl font-bold text-white flex items-center gap-1.5 group-hover:text-emerald-300 transition-colors">
+                    <h3 className="font-grotesk text-lg font-bold text-white flex items-center gap-1.5 group-hover:text-emerald-300 transition-colors">
                       <span>{member.name}</span>
-                      <span className="text-lg">{member.emoji}</span>
+                      <span className="text-base">{member.emoji}</span>
                     </h3>
                     <p className="text-xs font-semibold text-emerald-400 font-mono mt-0.5">
-                      {member.title}
+                      {member.subtitle}
                     </p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      {member.arabicRole}
+                      {member.role}
                     </p>
                   </div>
 
                   {/* Bio */}
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-5">
                     {member.bio}
                   </p>
                 </div>
 
-                <div>
-                  {/* Skills tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-slate-800/80">
-                    {member.skills.map((skill, sIdx) => (
+                {/* Academic Materials & Courses Tags */}
+                <div className="pt-4 border-t border-slate-800/80">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 mb-2.5">
+                    <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>المواد والمقررات الأكاديمية:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {member.subjects.map((sub, sIdx) => (
                       <span
                         key={sIdx}
-                        className="px-2 py-0.5 rounded-md text-[11px] font-mono bg-black text-slate-300 border border-slate-800"
+                        className="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-black/80 text-emerald-300 border border-emerald-500/30 hover:border-emerald-400 transition-colors"
                       >
-                        {skill}
+                        {sub}
                       </span>
                     ))}
                   </div>

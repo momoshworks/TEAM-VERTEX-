@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Menu, X, Sparkles, Layers, ArrowUpRight } from 'lucide-react';
+import { Volume2, VolumeX, Menu, X, Sparkles, Layers, ArrowUpRight, Lock, Shield, Calendar } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { ambientAudio } from '../utils/ambientAudio';
 
-export default function Navbar({ currentPage = 'home', onNavigate }) {
+export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdminLogin, isAdminLoggedIn = false }) {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -19,11 +20,13 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
     const state = sound.toggle();
     setSoundEnabled(state);
     if (state) sound.activate();
+    ambientAudio.toggle();
   };
 
   const navLinks = [
     { name: 'الرئيسية', id: 'home', href: '#hero' },
-    { name: 'خدمات', id: 'services', href: '#/services', isPage: true, badge: 'جديد' },
+    { name: 'خدمات', id: 'services', href: '#/services', isPage: true, targetPage: 'services', badge: 'جديد' },
+    { name: 'الفعاليات', id: 'events', href: '#/events', isPage: true, targetPage: 'events', badge: 'قريباً' },
     { name: 'عن الفريق', id: 'about', href: '#about' },
     { name: 'المسارات', id: 'tracks', href: '#tracks' },
     { name: 'القيادة والإدارة', id: 'leadership', href: '#leadership' },
@@ -37,10 +40,11 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
     setMobileMenuOpen(false);
 
     if (link.isPage) {
+      const target = link.targetPage || link.id;
       if (onNavigate) {
-        onNavigate('services');
+        onNavigate(target);
       } else {
-        window.location.hash = '/services';
+        window.location.hash = `/${target}`;
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -119,7 +123,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
         <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/70 backdrop-blur-md border border-cyan-500/25 shadow-inner">
           {navLinks.map((link) => {
             const isActive =
-              (link.isPage && currentPage === 'services') ||
+              (link.isPage && currentPage === (link.targetPage || link.id)) ||
               (!link.isPage && link.id === 'home' && currentPage === 'home');
 
             return (
@@ -146,7 +150,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
         </nav>
 
         {/* Right Action Icons & CTA */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2.5">
           {/* Sound Toggle */}
           <button
             onClick={toggleSound}
@@ -156,6 +160,25 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
             aria-label="تبديل الصوت"
           >
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+          </button>
+
+          {/* Admin Login CTA Button */}
+          <button
+            onClick={() => {
+              sound.click();
+              if (isAdminLoggedIn) {
+                if (onNavigate) onNavigate('admin');
+                else window.location.hash = '/admin';
+              } else if (onOpenAdminLogin) {
+                onOpenAdminLogin();
+              }
+            }}
+            onMouseEnter={() => sound.hover()}
+            className="relative inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold text-cyan-300 bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-300 hover:bg-cyan-500/15 shadow-[0_0_12px_rgba(0,229,255,0.2)] hover:shadow-[0_0_18px_rgba(0,229,255,0.4)] transition-all cursor-pointer hover:scale-105 active:scale-95"
+            title={isAdminLoggedIn ? 'لوحة تحكم الإدارة' : 'تسجيل دخول الإدارة (Admin Log In)'}
+          >
+            <Lock className="w-3.5 h-3.5 text-cyan-400" />
+            <span>{isAdminLoggedIn ? 'لوحة الإدارة' : 'دخول الأدمن'}</span>
           </button>
 
           {/* Join CTA Button */}
@@ -176,7 +199,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
               }
             }}
             onMouseEnter={() => sound.hover()}
-            className="relative inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs lg:text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_25px_rgba(0,229,255,0.7)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            className="relative inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs lg:text-sm font-bold text-black bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_25px_rgba(0,229,255,0.7)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-slate-950 animate-spin" style={{ animationDuration: '4s' }} />
             <span>انضم للفريق</span>
@@ -211,7 +234,7 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
           <div className="flex flex-col gap-2">
             {navLinks.map((link) => {
               const isActive =
-                (link.isPage && currentPage === 'services') ||
+                (link.isPage && currentPage === (link.targetPage || link.id)) ||
                 (!link.isPage && link.id === 'home' && currentPage === 'home');
 
               return (
@@ -234,7 +257,26 @@ export default function Navbar({ currentPage = 'home', onNavigate }) {
                 </a>
               );
             })}
-            <div className="pt-3 border-t border-slate-800">
+            <div className="pt-3 border-t border-slate-800 space-y-2">
+              {/* Admin Button Mobile */}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  sound.click();
+                  if (isAdminLoggedIn) {
+                    if (onNavigate) onNavigate('admin');
+                    else window.location.hash = '/admin';
+                  } else if (onOpenAdminLogin) {
+                    onOpenAdminLogin();
+                  }
+                }}
+                className="w-full py-2.5 rounded-xl font-bold text-xs text-cyan-300 bg-slate-900 border border-cyan-500/40 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Lock className="w-3.5 h-3.5 text-cyan-400" />
+                <span>{isAdminLoggedIn ? 'لوحة تحكم الإدارة' : 'دخول الأدمن (Admin Log In)'}</span>
+              </button>
+
+              {/* Join Button Mobile */}
               <a
                 href="#join"
                 onClick={(e) => {
