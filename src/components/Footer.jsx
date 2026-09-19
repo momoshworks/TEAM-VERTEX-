@@ -2,8 +2,9 @@ import React from 'react';
 import { Sparkles, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function Footer() {
-  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSd8WhwP3BYktXm0xu2sRYI0N6fw5qszK41y5vksNX1aTL2xfg/viewform';
+export default function Footer({ currentPage = 'home', onNavigate }) {
+  const FORM_URL =
+    'https://docs.google.com/forms/d/e/1FAIpQLSd8WhwP3BYktXm0xu2sRYI0N6fw5qszK41y5vksNX1aTL2xfg/viewform';
 
   const socialLinks = [
     {
@@ -33,7 +34,33 @@ export default function Footer() {
         </svg>
       ),
     },
+    {
+      name: 'WhatsApp (01034191685)',
+      url: 'https://wa.me/201034191685',
+      icon: (
+        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.044c.101-.116.433-.506.549-.68.116-.173.232-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.115.547 4.102 1.504 5.834l-1.597 5.832 6.002-1.574c1.663.908 3.568 1.423 5.592 1.423 6.627 0 12-5.373 12-12s-5.373-12-12-12z" />
+        </svg>
+      ),
+    },
   ];
+
+  const handleSectionLink = (e, targetHash) => {
+    sound.click();
+    if (currentPage !== 'home') {
+      e.preventDefault();
+      if (onNavigate) onNavigate('home');
+      else window.location.hash = '/';
+      setTimeout(() => {
+        if (targetHash === '#hero') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const el = document.querySelector(targetHash);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 120);
+    }
+  };
 
   return (
     <footer className="relative border-t border-cyan-500/20 bg-black py-14 px-4 z-10">
@@ -47,19 +74,70 @@ export default function Footer() {
             </span>
           </div>
           <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
-            الفريق الطلابي والبحثي الرائد بكلية الحاسبات والذكاء الاصطناعي — <span className="text-cyan-300">جامعة الدلتا للعلوم والتكنولوجيا</span>.
+            الفريق الطلابي والبحثي الرائد بكلية الذكاء الاصطناعي —{' '}
+            <span className="text-cyan-300">جامعة الدلتا للعلوم والتكنولوجيا</span>.
           </p>
         </div>
 
         {/* Links & Official Form Button */}
         <div className="flex flex-col items-center gap-4">
           <div className="flex flex-wrap justify-center gap-6 text-xs text-slate-400 font-medium">
-            <a href="#hero" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">الرئيسية</a>
-            <a href="#about" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">عن الفريق</a>
-            <a href="#tracks" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">المسارات</a>
-            <a href="#leadership" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">الإدارة</a>
-            <a href="#innovations" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">المشاريع</a>
-            <a href="#join" onClick={() => sound.click()} className="hover:text-cyan-300 transition-colors">انضم إلينا</a>
+            <a
+              href="#hero"
+              onClick={(e) => handleSectionLink(e, '#hero')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              الرئيسية
+            </a>
+            <a
+              href="#/services"
+              onClick={(e) => {
+                e.preventDefault();
+                sound.click();
+                if (onNavigate) onNavigate('services');
+                else window.location.hash = '/services';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="text-cyan-400 font-bold hover:text-cyan-300 transition-colors flex items-center gap-1"
+            >
+              <span>خدمات الفريق</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+            </a>
+            <a
+              href="#about"
+              onClick={(e) => handleSectionLink(e, '#about')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              عن الفريق
+            </a>
+            <a
+              href="#tracks"
+              onClick={(e) => handleSectionLink(e, '#tracks')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              المسارات
+            </a>
+            <a
+              href="#leadership"
+              onClick={(e) => handleSectionLink(e, '#leadership')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              الإدارة
+            </a>
+            <a
+              href="#innovations"
+              onClick={(e) => handleSectionLink(e, '#innovations')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              المشاريع
+            </a>
+            <a
+              href="#join"
+              onClick={(e) => handleSectionLink(e, '#join')}
+              className="hover:text-cyan-300 transition-colors"
+            >
+              انضم إلينا
+            </a>
           </div>
 
           <div className="flex items-center gap-3">
@@ -83,7 +161,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               onClick={() => sound.click()}
               onMouseEnter={() => sound.hover()}
-              className="px-3 py-1.5 rounded-full text-xs font-bold text-black bg-cyan-400 hover:bg-cyan-300 transition-all flex items-center gap-1 shadow-[0_0_10px_rgba(0,229,255,0.4)]"
+              className="px-3.5 py-1.5 rounded-full text-xs font-bold text-black bg-cyan-400 hover:bg-cyan-300 transition-all flex items-center gap-1 shadow-[0_0_10px_rgba(0,229,255,0.4)]"
             >
               <span>فورم التسجيل</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -98,8 +176,8 @@ export default function Footer() {
             <span className="text-cyan-300 font-bold font-orbitron">VERTEX AI TEAM</span>
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
           </div>
-          <p className="text-[11px] text-slate-500 font-mono">
-            Faculty of Artificial Intelligence — Delta University © {new Date().getFullYear()}
+          <p className="text-[11px] text-slate-400">
+            جامعة الدلتا للعلوم والتكنولوجيا — جميع الحقوق محفوظة © {new Date().getFullYear()}
           </p>
         </div>
       </div>
