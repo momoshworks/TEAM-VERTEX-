@@ -52,11 +52,26 @@ export default function LeadershipSection() {
       emoji: '👩‍💻✨',
       bio: 'الإشراف على الدراسات والأبحاث الأكاديمية في معالجة اللغات الطبيعية وتعلم الآلة وتوجيه فرق العمل البحثية.',
       badge: 'Group Admin',
-      initials: 'N',
+      initials: 'NV',
       avatarGradient: 'from-purple-600 via-pink-600 to-indigo-600',
       borderColor: 'border-pink-400',
       specialty: 'Machine Learning & NLP Research',
       skills: ['NLP & LLMs', 'Academic Research', 'Model Optimization', 'Python'],
+      status: 'Online & Active',
+    },
+    {
+      name: 'بشمهندسة روان (Eng. Rawan)',
+      title: 'Group Admin & Marketing Lead',
+      arabicRole: 'مسؤولة التسويق والعلاقات الرقمية (Marketing Lead)',
+      emoji: '🌸✨',
+      bio: 'قيادة الحملات التسويقية والهوية الرقمية لفريق VERTEX، وصناعة المحتوى الإبداعي وإبراز إنجازات ومشاريع كلية الذكاء الاصطناعي بأسلوب عصري جذاب.',
+      badge: 'Marketing Lead ✨',
+      initials: 'RW',
+      avatarGradient: 'from-pink-500 via-rose-500 to-fuchsia-600',
+      borderColor: 'border-pink-400',
+      isPinkShine: true, // Special flag for glossy sparkling pink styling
+      specialty: 'Digital Marketing, Brand Strategy & Content',
+      skills: ['Marketing Lead', 'Brand Identity', 'Media & PR', 'Content Strategy', 'Campaigns'],
       status: 'Online & Active',
     },
   ];
@@ -320,17 +335,35 @@ export default function LeadershipSection() {
 
       {/* Content Container with Scroll Reveal */}
       <div className="scroll-reveal min-h-[360px]">
-        {/* Admins Grid (3 Admins: Moaz, Bahey, Niveen) */}
+        {/* Admins Grid (4 Admins: Moaz, Bahey, Niveen, Rawan) */}
         {activeTab === 'admins' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 max-w-6xl mx-auto gap-8 animate-in fade-in zoom-in-95 duration-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto gap-6 animate-in fade-in zoom-in-95 duration-300">
             {admins.map((admin, idx) => (
               <div
                 key={idx}
                 onMouseEnter={() => sound.hover()}
-                className="glass-panel rounded-3xl p-7 border border-cyan-500/20 hover:border-cyan-400/50 glass-panel-hover flex flex-col justify-between group relative overflow-hidden"
+                className={`glass-panel rounded-3xl p-6 sm:p-7 flex flex-col justify-between group relative overflow-hidden transition-all duration-300 ${
+                  admin.isPinkShine
+                    ? 'border-2 border-pink-500/60 hover:border-pink-300 bg-gradient-to-b from-pink-950/30 via-slate-950/80 to-fuchsia-950/30 shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:shadow-[0_0_50px_rgba(236,72,153,0.65)] hover:-translate-y-1.5'
+                    : 'border border-cyan-500/20 hover:border-cyan-400/50 glass-panel-hover'
+                }`}
               >
-                {/* Background gradient orb */}
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform" />
+                {/* Glossy Sheen & Sparkle Effects for Marketing Lead (Eng. Rawan) */}
+                {admin.isPinkShine ? (
+                  <>
+                    {/* Light Sheen Sweep Effect */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-pink-300/30 to-transparent pointer-events-none" />
+                    {/* Pink Sparkles floating indicator */}
+                    <div className="absolute top-4 left-4 flex items-center gap-1 text-pink-400 pointer-events-none">
+                      <Sparkles className="w-4 h-4 text-pink-400 animate-spin" style={{ animationDuration: '6s' }} />
+                    </div>
+                    {/* Glowing background pink orb */}
+                    <div className="absolute -top-12 -right-12 w-36 h-36 bg-pink-500/25 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform animate-pulse" />
+                  </>
+                ) : (
+                  /* Standard background gradient orb */
+                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none group-hover:scale-150 transition-transform" />
+                )}
 
                 <div>
                   {/* Avatar rendering */}
@@ -355,7 +388,11 @@ export default function LeadershipSection() {
                         />
                       ) : (
                         <div
-                          className={`w-20 h-20 rounded-full border-2 ${admin.borderColor} shadow-[0_0_15px_rgba(0,229,255,0.4)] bg-gradient-to-br ${admin.avatarGradient} flex items-center justify-center text-white font-orbitron font-extrabold text-2xl group-hover:scale-105 transition-transform shadow-inner`}
+                          className={`w-20 h-20 rounded-full border-2 ${admin.borderColor} ${
+                            admin.isPinkShine
+                              ? 'shadow-[0_0_25px_rgba(236,72,153,0.7)]'
+                              : 'shadow-[0_0_15px_rgba(0,229,255,0.4)]'
+                          } bg-gradient-to-br ${admin.avatarGradient} flex items-center justify-center text-white font-orbitron font-extrabold text-2xl group-hover:scale-105 transition-transform shadow-inner`}
                         >
                           <span>{admin.initials}</span>
                         </div>
@@ -363,18 +400,32 @@ export default function LeadershipSection() {
                       <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-black shadow-[0_0_8px_#10b981]" />
                     </div>
 
-                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">
+                    <span
+                      className={`text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1 ${
+                        admin.isPinkShine
+                          ? 'bg-pink-950/80 border border-pink-500/60 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.5)]'
+                          : 'bg-emerald-950/60 border border-emerald-500/40 text-emerald-300'
+                      }`}
+                    >
                       {admin.badge}
                     </span>
                   </div>
 
                   {/* Name & Titles */}
                   <div className="mb-4">
-                    <h3 className="font-grotesk text-xl font-bold text-white flex items-center gap-1.5 group-hover:text-cyan-300 transition-colors">
+                    <h3
+                      className={`font-grotesk text-lg sm:text-xl font-bold text-white flex items-center gap-1.5 transition-colors ${
+                        admin.isPinkShine ? 'group-hover:text-pink-300' : 'group-hover:text-cyan-300'
+                      }`}
+                    >
                       <span>{admin.name}</span>
                       <span className="text-lg">{admin.emoji}</span>
                     </h3>
-                    <p className="text-xs font-semibold text-cyan-400 font-mono mt-0.5">
+                    <p
+                      className={`text-xs font-semibold font-mono mt-0.5 ${
+                        admin.isPinkShine ? 'text-pink-400' : 'text-cyan-400'
+                      }`}
+                    >
                       {admin.title}
                     </p>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -383,7 +434,7 @@ export default function LeadershipSection() {
                   </div>
 
                   {/* Bio */}
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6">
                     {admin.bio}
                   </p>
                 </div>
@@ -394,7 +445,11 @@ export default function LeadershipSection() {
                     {admin.skills.map((skill, sIdx) => (
                       <span
                         key={sIdx}
-                        className="px-2 py-0.5 rounded-md text-[11px] font-mono bg-black text-slate-300 border border-slate-800"
+                        className={`px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-mono border ${
+                          admin.isPinkShine
+                            ? 'bg-pink-950/50 text-pink-200 border-pink-800/60 shadow-[0_0_8px_rgba(236,72,153,0.2)]'
+                            : 'bg-black text-slate-300 border-slate-800'
+                        }`}
                       >
                         {skill}
                       </span>

@@ -285,6 +285,12 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
                 👑 ليدر الفريق التقني المعتمد (Authorized Technical Leader)
               </span>
             )}
+            {adminSession?.adminName?.includes('روان') && (
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-pink-500/20 border border-pink-400/60 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.4)] flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-pink-400 animate-spin" style={{ animationDuration: '6s' }} />
+                <span>🌸 مسؤولة التسويق المعتمدة (Authorized Marketing Lead)</span>
+              </span>
+            )}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
             إدارة مباشرة لزيارات الموقع، سجلات الخدمات، وجدول الفعاليات والورش المباشرة مع العداد التنازلي.
@@ -470,7 +476,7 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
             {serviceRecords.length}
           </div>
           <p className="text-[11px] text-slate-400 mt-2">
-            تم تسجيلها وإرسالها لجروب الواتساب 01034191685
+            تم تسجيلها وإرسالها لجروب الواتساب 01016011662
           </p>
         </div>
 
@@ -804,7 +810,7 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
                 <span>سجلات وطلبات الخدمات الواردة من الطلاب ({serviceRecords.length})</span>
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                جميع هذه السجلات تم توثيقها رسمياً وتوجيهها أيضاً إلى جروب واتساب الفريق 01034191685.
+                جميع هذه السجلات تم توثيقها رسمياً وتوجيهها أيضاً إلى جروب واتساب الفريق 01016011662.
               </p>
             </div>
             {serviceRecords.length > 0 && (

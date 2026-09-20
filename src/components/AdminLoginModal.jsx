@@ -16,6 +16,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
     { name: 'eng, moaz deabes', role: 'Group Admin & Lead AI Architect', initials: 'MD' },
     { name: 'باهَـي (Bahey)', role: 'Group Admin & Operations Director', initials: 'BH' },
     { name: 'بشمهندسة نيفين (Eng. Niveen)', role: 'Group Admin & Research Director', initials: 'NV' },
+    { name: 'بشمهندسة روان (Eng. Rawan)', role: 'Marketing Lead • مسؤولة التسويق ✨', initials: 'RW' },
   ];
 
   const handleLogin = (e) => {
@@ -23,8 +24,8 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
     sound.click();
     setError('');
 
-    // Authorized passcodes (Universal + specific passcodes for Eng. Mohamed Shaaban & Admins)
-    const validPasscodes = ['vertex2026', 'admin123', 'delta2026', 'shaaban2026', 'mohamed2026', 'shaaban'];
+    // Authorized passcodes (Universal + specific passcodes for Leaders & Admins)
+    const validPasscodes = ['vertex2026', 'admin123', 'delta2026', 'shaaban2026', 'mohamed2026', 'shaaban', 'rawan2026', 'rawan', 'marketing'];
 
     if (!passcode.trim()) {
       setError('يرجى إدخال كلمة مرور الإدارة');
@@ -40,7 +41,11 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
         sound.activate();
         const adminSession = {
           adminName: selectedAdmin,
-          role: selectedAdmin.includes('محمد شعبان') ? 'Technical Team Leader' : 'Group Admin',
+          role: selectedAdmin.includes('محمد شعبان')
+            ? 'Technical Team Leader'
+            : selectedAdmin.includes('روان')
+            ? 'Marketing Lead'
+            : 'Group Admin',
           isAuthorized: true,
           loginTime: new Date().toISOString(),
           isLoggedIn: true,
@@ -51,7 +56,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
         onClose();
       } else {
         setIsSubmitting(false);
-        setError('كلمة المرور غير صحيحة! كلمة المرور المعتمدة هي: vertex2026 أو shaaban2026');
+        setError('كلمة المرور غير صحيحة! كلمات المرور المعتمدة: vertex2026 أو shaaban2026 أو rawan2026');
         sound.playHum();
       }
     }, 400);
