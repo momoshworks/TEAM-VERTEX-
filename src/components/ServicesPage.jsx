@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   GraduationCap,
   Code2,
@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/sound';
+import { cloudDb } from '../services/cloudDb';
 
 export default function ServicesPage({ onNavigateHome }) {
   const [selectedService, setSelectedService] = useState(null);
@@ -37,7 +38,7 @@ export default function ServicesPage({ onNavigateHome }) {
   const [currentRecord, setCurrentRecord] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
 
-  // Saved records in localStorage
+  // Saved records in localStorage & cloud sync
   const [savedRecords, setSavedRecords] = useState(() => {
     try {
       const raw = localStorage.getItem('vertex_service_records');
@@ -46,6 +47,22 @@ export default function ServicesPage({ onNavigateHome }) {
       return [];
     }
   });
+
+  // Listen to background cloud database sync updates
+  useEffect(() => {
+    const handleSync = () => {
+      try {
+        const raw = localStorage.getItem('vertex_service_records');
+        if (raw) setSavedRecords(JSON.parse(raw));
+      } catch {}
+    };
+    window.addEventListener('vertex_data_synced', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('vertex_data_synced', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -186,7 +203,7 @@ export default function ServicesPage({ onNavigateHome }) {
     },
     {
       q: 'كيف يتم تسجيل ومتابعة طلبي في جروب الواتساب؟',
-      a: 'بمجرد الضغط على إرسال الطلب، يقوم النظام أوتوماتيكياً بتوليد كود سجل رسمي (Record Ticket) وإرسال كافة تفاصيل اسمك وفرقتك وطلبك مباشرة إلى جروب واتساب الفريق على الرقم 01034191685، ليقوم مسؤول الخدمة بالرد الفوري عليك.',
+      a: 'بمجرد الضغط على إرسال الطلب، يقوم النظام أوتوماتيكياً بتوليد كود سجل رسمي (Record Ticket) وإرسال كافة تفاصيل اسمك وفرقتك وطلبك مباشرة إلى جروب واتساب الفريق على الرقم 01016011662، ليقوم مسؤول الخدمة بالرد الفوري عليك.',
     },
     {
       q: 'من يقوم بمراجعة الأكواد ومشاريع التخرج؟',
@@ -238,7 +255,7 @@ ${formData.notes}
 🕒 *توقيت التسجيل:* ${timestamp}
 ✅ *تم التسجيل رسمياً وحفظه في سجلات خدمات VERTEX*`;
 
-    const waUrl = `https://wa.me/201034191685?text=${encodeURIComponent(formattedWhatsAppText)}`;
+    const waUrl = `https://wa.me/201016011662?text=${encodeURIComponent(formattedWhatsAppText)}`;
 
     const newRecord = {
       id: recordId,
@@ -252,14 +269,10 @@ ${formData.notes}
       waUrl,
     };
 
-    // Save to state and localStorage
+    // Save to state, localStorage, and Cloud Database
     const updated = [newRecord, ...savedRecords];
     setSavedRecords(updated);
-    try {
-      localStorage.setItem('vertex_service_records', JSON.stringify(updated));
-    } catch (err) {
-      console.error('Error saving record:', err);
-    }
+    cloudDb.addRecord(newRecord);
 
     setCurrentRecord(newRecord);
     setSubmitted(true);
@@ -352,7 +365,7 @@ ${formData.notes}
         <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-3xl mx-auto mb-8 font-normal">
           منصة دعم متكاملة موجهة لطلاب وباحثي كلية الذكاء الاصطناعي بـ{' '}
           <span className="text-cyan-300 font-semibold">جامعة الدلتا للعلوم والتكنولوجيا</span>، يتم تسجيل كافة طلباتها وأرشفتها مباشرة في{' '}
-          <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span> للمتابعة اللحظية.
+          <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01016011662)</span> للمتابعة اللحظية.
         </p>
 
         {/* Quick CTA to Request Service */}
@@ -366,14 +379,14 @@ ${formData.notes}
           </button>
 
           <a
-            href="https://wa.me/201034191685"
+            href="https://wa.me/201016011662"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => sound.click()}
             className="px-6 py-3.5 rounded-2xl font-bold text-sm text-emerald-300 glass-panel border border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-500/10 shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all flex items-center gap-2"
           >
             <MessageSquare className="w-4 h-4" />
-            <span>جروب الواتساب المباشر (01034191685)</span>
+            <span>جروب الواتساب المباشر (01016011662)</span>
           </a>
         </div>
       </div>
@@ -588,7 +601,7 @@ ${formData.notes}
                   </h3>
                 </div>
                 <p className="text-xs text-slate-400 mb-6">
-                  املأ بياناتك وسيتم تسجيل السجل وفتحه تلقائياً في <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span> لسرعة المتابعة.
+                  املأ بياناتك وسيتم تسجيل السجل وفتحه تلقائياً في <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01016011662)</span> لسرعة المتابعة.
                 </p>
 
                 {/* Service Select */}
@@ -699,7 +712,7 @@ ${formData.notes}
                   تم تسجيل السجل بنجاح! 🎉
                 </h3>
                 <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 max-w-sm mx-auto">
-                  تم تسجيل طلبك برقم <span className="font-mono text-cyan-400 font-bold">#{currentRecord?.id}</span>، وتجهيزه للإرسال مباشرة إلى <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01034191685)</span>.
+                  تم تسجيل طلبك برقم <span className="font-mono text-cyan-400 font-bold">#{currentRecord?.id}</span>، وتجهيزه للإرسال مباشرة إلى <span className="text-emerald-400 font-bold">جروب واتساب الفريق (01016011662)</span>.
                 </p>
 
                 {/* Ticket Card Preview */}
@@ -876,7 +889,7 @@ ${formData.notes}
                 </button>
 
                 <span className="text-[11px] text-slate-400">
-                  جميع السجلات تحفظ محلياً ويتم إرسالها لرقم الواتساب: 01034191685
+                  جميع السجلات تحفظ محلياً ويتم إرسالها لرقم الواتساب: 01016011662
                 </span>
               </div>
             )}

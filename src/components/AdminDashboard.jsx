@@ -22,9 +22,14 @@ import {
   RefreshCw,
   Sliders,
   AlertTriangle,
-  Award
+  Award,
+  Database,
+  Server,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { cloudDb } from '../services/cloudDb';
 
 export default function AdminDashboard({ adminSession, onLogout, onNavigateHome, onNavigateEvents }) {
   // Live Visits counter
@@ -115,18 +120,49 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
 
   const [activeTab, setActiveTab] = useState('events'); // 'events' | 'requests' | 'analytics'
   const [notification, setNotification] = useState('');
+  const [cloudStatus, setCloudStatus] = useState({
+    isConnected: cloudDb.isConnected,
+    apiUrl: cloudDb.apiUrl,
+  });
+  const [showCloudConfig, setShowCloudConfig] = useState(false);
+  const [customApiUrlInput, setCustomApiUrlInput] = useState(cloudDb.getSavedApiUrl() || '');
 
   const showToast = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(''), 3500);
   };
 
-  // Sync events to localStorage
+  // Real-time bidirectional synchronization with Cloud Database
+  useEffect(() => {
+    const unsub = cloudDb.subscribe(setCloudStatus);
+    const handleSync = () => {
+      try {
+        const savedRecords = localStorage.getItem('vertex_service_records');
+        if (savedRecords) setServiceRecords(JSON.parse(savedRecords));
+        const savedEvents = localStorage.getItem('vertex_events_list');
+        if (savedEvents) setEvents(JSON.parse(savedEvents));
+        const savedVisits = localStorage.getItem('vertex_site_visits');
+        if (savedVisits) setVisits(parseInt(savedVisits, 10));
+      } catch {}
+    };
+
+    window.addEventListener('vertex_data_synced', handleSync);
+    window.addEventListener('storage', handleSync);
+
+    // Initial background cloud sync
+    cloudDb.syncFromCloud();
+
+    return () => {
+      unsub();
+      window.removeEventListener('vertex_data_synced', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
+
+  // Save events to state, localStorage, and Cloud Database
   const saveEvents = (newEventsList) => {
     setEvents(newEventsList);
-    localStorage.setItem('vertex_events_list', JSON.stringify(newEventsList));
-    // Dispatch a storage event so any other open tab catches it
-    window.dispatchEvent(new Event('storage'));
+    cloudDb.saveEvents(newEventsList);
   };
 
   const handleOpenAddForm = () => {
@@ -249,6 +285,12 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
                 👑 ليدر الفريق التقني المعتمد (Authorized Technical Leader)
               </span>
             )}
+            {adminSession?.adminName?.includes('روان') && (
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-pink-500/20 border border-pink-400/60 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.4)] flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-pink-400 animate-spin" style={{ animationDuration: '6s' }} />
+                <span>🌸 مسؤولة التسويق المعتمدة (Authorized Marketing Lead)</span>
+              </span>
+            )}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1">
             إدارة مباشرة لزيارات الموقع، سجلات الخدمات، وجدول الفعاليات والورش المباشرة مع العداد التنازلي.
@@ -296,6 +338,102 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
         </div>
       </div>
 
+      {/* Cloud Database Status Bar */}
+      <div className="glass-panel rounded-2xl p-4 border border-slate-800 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div
+            className={`p-2.5 rounded-xl flex items-center justify-center ${
+              cloudStatus.isConnected
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+            }`}
+          >
+            {cloudStatus.isConnected ? <Wifi className="w-4 h-4 animate-pulse" /> : <WifiOff className="w-4 h-4" />}
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-white">حالة قاعدة البيانات:</span>
+              <span
+                className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  cloudStatus.isConnected
+                    ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-500/40'
+                    : 'bg-amber-950/80 text-amber-300 border border-amber-500/40'
+                }`}
+              >
+                {cloudStatus.isConnected
+                  ? '🟢 متصلة سحابياً وتُحدث تلقائياً (Live Cloud Sync)'
+                  : '🟡 التخزين المحلي الآمن (Offline Local Mode)'}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              السيرفر النشط: <span className="font-mono text-cyan-300">{cloudStatus.apiUrl}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={async () => {
+              sound.click();
+              showToast('جاري التحقق والمزامنة السحابية...');
+              const ok = await cloudDb.syncFromCloud();
+              if (ok) showToast('✅ تمت المزامنة السحابية بنجاح!');
+              else showToast('⚠️ تعذر الاتصال بالسيرفر، البيانات محفوظة محلياً.');
+            }}
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold glass-panel border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-300 flex items-center gap-1.5 cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>مزامنة سحابية فورية</span>
+          </button>
+
+          <button
+            onClick={() => setShowCloudConfig(!showCloudConfig)}
+            className="px-3 py-1.5 rounded-xl text-xs font-semibold glass-panel border border-slate-700 hover:border-purple-400 text-slate-300 hover:text-purple-300 flex items-center gap-1.5 cursor-pointer"
+          >
+            <Sliders className="w-3.5 h-3.5" />
+            <span>إعدادات السيرفر</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Cloud Config Modal / Drawer */}
+      {showCloudConfig && (
+        <div className="glass-panel rounded-2xl p-5 border border-purple-500/40 mb-8 animate-in zoom-in-95 duration-200">
+          <h4 className="text-xs font-bold text-white mb-2 flex items-center gap-2">
+            <Server className="w-4 h-4 text-purple-400" />
+            <span>ربط سيرفر قاعدة بيانات خارجي (Render / Vercel / Cloud URL):</span>
+          </h4>
+          <p className="text-xs text-slate-400 mb-3">
+            إذا قمت برفع السيرفر مجاناً على Render أو Vercel، الصق رابط الـ URL هنا ليتم الربط والمزامنة السحابية التلقائية. اتركه فارغاً لاستخدام السيرفر الافتراضي.
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={customApiUrlInput}
+              onChange={(e) => setCustomApiUrlInput(e.target.value)}
+              placeholder="مثال: https://vertex-api.onrender.com"
+              className="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs outline-none focus:border-purple-400 font-mono"
+            />
+            <button
+              onClick={async () => {
+                sound.click();
+                showToast('جاري اختبار الرابط الجديد...');
+                const ok = await cloudDb.setCustomApiUrl(customApiUrlInput);
+                if (ok) {
+                  showToast('🎉 تم الاتصال بنجاح بقاعدة البيانات السحابية!');
+                  setShowCloudConfig(false);
+                } else {
+                  showToast('⚠️ تعذر الاتصال بالرابط المدخل، تأكد من تشغيل السيرفر.');
+                }
+              }}
+              className="px-4 py-2 rounded-xl font-bold text-xs text-black bg-purple-400 hover:bg-purple-300 cursor-pointer"
+            >
+              حفظ واختبار
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 4 Live Analytics KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
         {/* Total Visits Card */}
@@ -338,7 +476,7 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
             {serviceRecords.length}
           </div>
           <p className="text-[11px] text-slate-400 mt-2">
-            تم تسجيلها وإرسالها لجروب الواتساب 01034191685
+            تم تسجيلها وإرسالها لجروب الواتساب 01016011662
           </p>
         </div>
 
@@ -672,7 +810,7 @@ export default function AdminDashboard({ adminSession, onLogout, onNavigateHome,
                 <span>سجلات وطلبات الخدمات الواردة من الطلاب ({serviceRecords.length})</span>
               </h3>
               <p className="text-xs text-slate-400 mt-1">
-                جميع هذه السجلات تم توثيقها رسمياً وتوجيهها أيضاً إلى جروب واتساب الفريق 01034191685.
+                جميع هذه السجلات تم توثيقها رسمياً وتوجيهها أيضاً إلى جروب واتساب الفريق 01016011662.
               </p>
             </div>
             {serviceRecords.length > 0 && (
