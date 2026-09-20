@@ -19,6 +19,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { cloudDb } from '../services/cloudDb';
 
 export default function EventsPage({ onNavigateHome }) {
   const [events, setEvents] = useState(() => {
@@ -82,9 +83,9 @@ export default function EventsPage({ onNavigateHome }) {
     hasEnded: false,
   });
 
-  // Sync with localStorage if Admin edits events in another tab
+  // Sync with localStorage and cloud database when Admin adds or edits an event
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleSync = () => {
       try {
         const saved = localStorage.getItem('vertex_events_list');
         if (saved) setEvents(JSON.parse(saved));
@@ -92,8 +93,13 @@ export default function EventsPage({ onNavigateHome }) {
         console.error(err);
       }
     };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('vertex_data_synced', handleSync);
+    cloudDb.getEvents();
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('vertex_data_synced', handleSync);
+    };
   }, []);
 
   // Find next closest upcoming event

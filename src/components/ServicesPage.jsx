@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   GraduationCap,
   Code2,
@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { sound } from '../utils/sound';
+import { cloudDb } from '../services/cloudDb';
 
 export default function ServicesPage({ onNavigateHome }) {
   const [selectedService, setSelectedService] = useState(null);
@@ -37,7 +38,7 @@ export default function ServicesPage({ onNavigateHome }) {
   const [currentRecord, setCurrentRecord] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
 
-  // Saved records in localStorage
+  // Saved records in localStorage & cloud sync
   const [savedRecords, setSavedRecords] = useState(() => {
     try {
       const raw = localStorage.getItem('vertex_service_records');
@@ -46,6 +47,22 @@ export default function ServicesPage({ onNavigateHome }) {
       return [];
     }
   });
+
+  // Listen to background cloud database sync updates
+  useEffect(() => {
+    const handleSync = () => {
+      try {
+        const raw = localStorage.getItem('vertex_service_records');
+        if (raw) setSavedRecords(JSON.parse(raw));
+      } catch {}
+    };
+    window.addEventListener('vertex_data_synced', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('vertex_data_synced', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -252,14 +269,10 @@ ${formData.notes}
       waUrl,
     };
 
-    // Save to state and localStorage
+    // Save to state, localStorage, and Cloud Database
     const updated = [newRecord, ...savedRecords];
     setSavedRecords(updated);
-    try {
-      localStorage.setItem('vertex_service_records', JSON.stringify(updated));
-    } catch (err) {
-      console.error('Error saving record:', err);
-    }
+    cloudDb.addRecord(newRecord);
 
     setCurrentRecord(newRecord);
     setSubmitted(true);

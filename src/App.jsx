@@ -15,6 +15,7 @@ import AmbientPlayer from './components/AmbientPlayer';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import { useScrollReveal } from './hooks/useScrollReveal';
+import { cloudDb } from './services/cloudDb';
 
 export default function App() {
   // Activate the scroll reveal & fade engine
@@ -44,14 +45,12 @@ export default function App() {
 
   const [adminLoginModalOpen, setAdminLoginModalOpen] = useState(false);
 
-  // Automatic Site Visits Tracking
+  // Automatic Site Visits Tracking & Cloud DB Sync
   useEffect(() => {
     try {
-      const key = 'vertex_site_visits';
-      const current = parseInt(localStorage.getItem(key) || '142', 10);
       const sessionVisited = sessionStorage.getItem('vertex_session_counted');
       if (!sessionVisited) {
-        localStorage.setItem(key, (current + 1).toString());
+        cloudDb.incrementVisits();
         sessionStorage.setItem('vertex_session_counted', 'true');
       }
     } catch (e) {
