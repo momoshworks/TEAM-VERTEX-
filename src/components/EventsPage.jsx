@@ -19,6 +19,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { sound } from '../utils/sound';
+import { cloudDb } from '../services/cloudDb';
 
 export default function EventsPage({ onNavigateHome }) {
   const [events, setEvents] = useState(() => {
@@ -82,9 +83,9 @@ export default function EventsPage({ onNavigateHome }) {
     hasEnded: false,
   });
 
-  // Sync with localStorage if Admin edits events in another tab
+  // Sync with localStorage and cloud database when Admin adds or edits an event
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleSync = () => {
       try {
         const saved = localStorage.getItem('vertex_events_list');
         if (saved) setEvents(JSON.parse(saved));
@@ -92,8 +93,13 @@ export default function EventsPage({ onNavigateHome }) {
         console.error(err);
       }
     };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleSync);
+    window.addEventListener('vertex_data_synced', handleSync);
+    cloudDb.getEvents();
+    return () => {
+      window.removeEventListener('storage', handleSync);
+      window.removeEventListener('vertex_data_synced', handleSync);
+    };
   }, []);
 
   // Find next closest upcoming event
@@ -146,7 +152,7 @@ export default function EventsPage({ onNavigateHome }) {
 📍 المكان: ${evt.location}
 يرجى تأكيد تسجيلي وحجز المقعد. شكراً لكم!`;
 
-    const url = `https://wa.me/201034191685?text=${encodeURIComponent(message)}`;
+    const url = `https://wa.me/201016011662?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
 
@@ -401,7 +407,7 @@ export default function EventsPage({ onNavigateHome }) {
                   className="w-full py-2.5 rounded-xl font-bold text-xs text-black bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>تأكيد الحضور عبر الواتساب (01034191685)</span>
+                  <span>تأكيد الحضور عبر الواتساب (01016011662)</span>
                 </button>
               </div>
             </div>
