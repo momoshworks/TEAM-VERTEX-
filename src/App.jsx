@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Vertex3DScene from './components/Vertex3DScene';
 import Hero from './components/Hero';
-import AboutSection from './components/AboutSection';
-import TracksSection from './components/TracksSection';
 import LeadershipSection from './components/LeadershipSection';
-import InnovationLab from './components/InnovationLab';
 import JoinSection from './components/JoinSection';
-import ServicesPage from './components/ServicesPage';
-import EventsPage from './components/EventsPage';
-import AdminDashboard from './components/AdminDashboard';
-import AdminLoginModal from './components/AdminLoginModal';
+import BottomExploreTabs from './components/BottomExploreTabs';
 import AmbientPlayer from './components/AmbientPlayer';
 import Footer from './components/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import { cloudDb } from './services/cloudDb';
+
+// Performance Optimization: Dynamic Code Splitting for Non-Critical Pages
+const ServicesPage = lazy(() => import('./components/ServicesPage'));
+const EventsPage = lazy(() => import('./components/EventsPage'));
+const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
+const AdminLoginModal = lazy(() => import('./components/AdminLoginModal'));
+
+// High-tech Cyber Loader Fallback
+function PageLoader() {
+  return (
+    <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 text-cyan-400">
+      <div className="w-10 h-10 rounded-full border-2 border-cyan-500/20 border-t-cyan-400 animate-spin shadow-[0_0_20px_rgba(0,229,255,0.4)]" />
+      <span className="font-orbitron text-[11px] tracking-widest text-slate-400 animate-pulse">
+        VERTEX // INITIALIZING...
+      </span>
+    </div>
+  );
+}
 
 export default function App() {
   // Activate the scroll reveal & fade engine
@@ -142,41 +154,44 @@ export default function App() {
         isAdminLoggedIn={!!adminSession}
       />
 
-      {/* Admin Login Modal */}
-      <AdminLoginModal
-        isOpen={adminLoginModalOpen}
-        onClose={() => setAdminLoginModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
-
-      {/* Main Content Router */}
-      {currentPage === 'admin' && adminSession ? (
-        <main className="relative z-10">
-          <AdminDashboard
-            adminSession={adminSession}
-            onLogout={handleAdminLogout}
-            onNavigateHome={() => navigateTo('home')}
-            onNavigateEvents={() => navigateTo('events')}
+      {/* Dynamic Lazy Loaded Pages with Suspense */}
+      <Suspense fallback={<PageLoader />}>
+        {/* Admin Login Modal */}
+        {adminLoginModalOpen && (
+          <AdminLoginModal
+            isOpen={adminLoginModalOpen}
+            onClose={() => setAdminLoginModalOpen(false)}
+            onLoginSuccess={handleLoginSuccess}
           />
-        </main>
-      ) : currentPage === 'events' ? (
-        <main className="relative z-10">
-          <EventsPage onNavigateHome={() => navigateTo('home')} />
-        </main>
-      ) : currentPage === 'services' ? (
-        <main className="relative z-10">
-          <ServicesPage onNavigateHome={() => navigateTo('home')} />
-        </main>
-      ) : (
-        <main className="relative z-10 flex flex-col gap-10 sm:gap-20">
-          <Hero />
-          <AboutSection />
-          <TracksSection />
-          <LeadershipSection />
-          <InnovationLab />
-          <JoinSection />
-        </main>
-      )}
+        )}
+
+        {/* Main Content Router */}
+        {currentPage === 'admin' && adminSession ? (
+          <main className="relative z-10">
+            <AdminDashboard
+              adminSession={adminSession}
+              onLogout={handleAdminLogout}
+              onNavigateHome={() => navigateTo('home')}
+              onNavigateEvents={() => navigateTo('events')}
+            />
+          </main>
+        ) : currentPage === 'events' ? (
+          <main className="relative z-10">
+            <EventsPage onNavigateHome={() => navigateTo('home')} />
+          </main>
+        ) : currentPage === 'services' ? (
+          <main className="relative z-10">
+            <ServicesPage onNavigateHome={() => navigateTo('home')} />
+          </main>
+        ) : (
+          <main className="relative z-10 flex flex-col gap-10 sm:gap-20">
+            <Hero />
+            <LeadershipSection />
+            <JoinSection />
+            <BottomExploreTabs />
+          </main>
+        )}
+      </Suspense>
 
       {/* Footer */}
       <Footer

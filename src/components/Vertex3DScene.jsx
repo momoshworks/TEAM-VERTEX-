@@ -485,6 +485,17 @@ export default function Vertex3DScene() {
     const animate = () => {
       animationId = requestAnimationFrame(animate);
       if (!isVisible) return;
+
+      // Smart GPU optimization: Pause Three.js rendering if viewing other pages or scrolled far away
+      const currentHash = window.location.hash;
+      const isViewingOtherPage =
+        currentHash.includes('services') ||
+        currentHash.includes('events') ||
+        currentHash.includes('admin');
+      if (isViewingOtherPage || window.scrollY > (window.innerHeight || 800) * 2.2) {
+        return;
+      }
+
       const elapsed = performance.now() * 0.001;
 
       // Smooth mouse lerping

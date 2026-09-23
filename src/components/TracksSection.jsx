@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Brain, Database, Lock, Dna, Code2, Sparkles, ChevronLeft, Layers, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function TracksSection() {
+export default function TracksSection({ embedded = false }) {
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   const tracks = [
@@ -98,9 +98,9 @@ export default function TracksSection() {
   };
 
   return (
-    <section id="tracks" className="relative py-28 px-4 max-w-7xl mx-auto z-10">
+    <section id="tracks" className={`relative ${embedded ? 'py-4 px-2' : 'py-28 px-4'} max-w-7xl mx-auto z-10`}>
       {/* Section Header */}
-      <div className="scroll-reveal text-center max-w-3xl mx-auto mb-20">
+      <div className={`scroll-reveal text-center max-w-3xl mx-auto ${embedded ? 'mb-10' : 'mb-20'}`}>
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-4">
           <Layers className="w-3.5 h-3.5" />
           <span>المسارات التخصصية المعتمدة — VERTEX TRACKS</span>

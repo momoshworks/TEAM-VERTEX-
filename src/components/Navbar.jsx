@@ -71,11 +71,11 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdminLo
     { name: 'الرئيسية', id: 'home', href: '#hero' },
     { name: 'خدمات', id: 'services', href: '#/services', isPage: true, targetPage: 'services', badge: 'جديد' },
     { name: 'الفعاليات', id: 'events', href: '#/events', isPage: true, targetPage: 'events', badge: 'قريباً' },
-    { name: 'عن الفريق', id: 'about', href: '#about' },
-    { name: 'المسارات', id: 'tracks', href: '#tracks' },
     { name: 'القيادة والإدارة', id: 'leadership', href: '#leadership' },
-    { name: 'المشاريع', id: 'innovations', href: '#innovations' },
     { name: 'انضم إلينا', id: 'join', href: '#join' },
+    { name: 'من نحن', id: 'about', href: '#about' },
+    { name: 'المسارات', id: 'tracks', href: '#tracks' },
+    { name: 'المشاريع', id: 'innovations', href: '#innovations' },
   ];
 
   const handleLinkClick = (e, link) => {
@@ -92,6 +92,9 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdminLo
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      const isTabTarget = ['#about', '#tracks', '#innovations'].includes(link.href);
+      const tabMap = { '#about': 'about', '#tracks': 'tracks', '#innovations': 'projects' };
+
       if (currentPage !== 'home') {
         if (onNavigate) {
           onNavigate('home');
@@ -99,7 +102,11 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdminLo
           window.location.hash = '/';
         }
         setTimeout(() => {
-          if (link.href === '#hero') {
+          if (isTabTarget) {
+            window.dispatchEvent(new CustomEvent('vertex_open_tab', { detail: { tab: tabMap[link.href] } }));
+            const el = document.getElementById('explore-tabs');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          } else if (link.href === '#hero') {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           } else {
             const target = document.querySelector(link.href);
@@ -107,7 +114,11 @@ export default function Navbar({ currentPage = 'home', onNavigate, onOpenAdminLo
           }
         }, 120);
       } else {
-        if (link.href === '#hero') {
+        if (isTabTarget) {
+          window.dispatchEvent(new CustomEvent('vertex_open_tab', { detail: { tab: tabMap[link.href] } }));
+          const el = document.getElementById('explore-tabs');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        } else if (link.href === '#hero') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           const target = document.querySelector(link.href);

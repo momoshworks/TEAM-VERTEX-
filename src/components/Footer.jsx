@@ -56,18 +56,32 @@ export default function Footer({
 
   const handleSectionLink = (e, targetHash) => {
     sound.click();
+    const isTabTarget = ['#about', '#tracks', '#innovations'].includes(targetHash);
+    const tabMap = { '#about': 'about', '#tracks': 'tracks', '#innovations': 'projects' };
+
     if (currentPage !== 'home') {
       e.preventDefault();
       if (onNavigate) onNavigate('home');
       else window.location.hash = '/';
       setTimeout(() => {
-        if (targetHash === '#hero') {
+        if (isTabTarget) {
+          window.dispatchEvent(new CustomEvent('vertex_open_tab', { detail: { tab: tabMap[targetHash] } }));
+          const el = document.getElementById('explore-tabs');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        } else if (targetHash === '#hero') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           const el = document.querySelector(targetHash);
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
       }, 120);
+    } else {
+      if (isTabTarget) {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent('vertex_open_tab', { detail: { tab: tabMap[targetHash] } }));
+        const el = document.getElementById('explore-tabs');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

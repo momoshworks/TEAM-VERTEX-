@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search, BookOpen, Map, Sparkles, CheckCircle2, ChevronLeft, ArrowUpRight, HelpCircle, FileText, Compass, ShieldCheck } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function InnovationLab() {
+export default function InnovationLab({ embedded = false }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
   const projects = [
@@ -74,9 +74,9 @@ export default function InnovationLab() {
   };
 
   return (
-    <section id="innovations" className="relative py-28 px-4 max-w-7xl mx-auto z-10">
+    <section id="innovations" className={`relative ${embedded ? 'py-4 px-2' : 'py-28 px-4'} max-w-7xl mx-auto z-10`}>
       {/* Section Header */}
-      <div className="scroll-reveal text-center max-w-3xl mx-auto mb-16">
+      <div className={`scroll-reveal text-center max-w-3xl mx-auto ${embedded ? 'mb-10' : 'mb-16'}`}>
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-4">
           <Compass className="w-3.5 h-3.5" />
           <span>مشاريع ومبادرات الفريق — VERTEX INITIATIVES</span>
